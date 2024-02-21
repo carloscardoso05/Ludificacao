@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "LudoQuiz.sln",
+    "dotnet.preferCSharpExtension": true
+}
