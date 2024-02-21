@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum GameState { SelectPlayersNumber, Playing, End };
@@ -8,12 +9,19 @@ public class GameManager : MonoBehaviour
     public static GameManager I;
     public GameState state = GameState.SelectPlayersNumber;
     private GameColor[] playersColors;
+    public GameColor? currentPlayerColor;
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject piecePrefab;
 
     private void Awake()
     {
         I = this;
+    }
+
+    private void Start()
+    {
+        MainMenu.SetActive(true);
+        Board.I.gameObject.SetActive(false);
     }
 
     private void GeneratePlayersPieces()
@@ -49,9 +57,31 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    public void InitGame(int playersQuantity){
+    public void InitGame(int playersQuantity)
+    {
         playersColors = GetColorsByPlayersQty(playersQuantity);
         GeneratePlayersPieces();
         MainMenu.SetActive(false);
+        UpdateCurrentPlayerColor();
+        Board.I.gameObject.SetActive(true);
+    }
+
+    public void UpdateCurrentPlayerColor()
+    {
+        if (currentPlayerColor == null)
+        {
+            currentPlayerColor = playersColors.First();
+        }
+        else
+        {
+            for (int i = 0; i < playersColors.Length; i++)
+            {
+                if (currentPlayerColor == playersColors[i])
+                {
+                    currentPlayerColor = playersColors[(i + 1) % playersColors.Length];
+                    return;
+                }
+            }
+        }
     }
 }
