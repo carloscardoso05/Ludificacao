@@ -6,8 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager I;
     public Dice dice;
     public GameState state = GameState.SelectPlayersNumber;
-    private GameColor[] colors;
-    public GameColor? currentColor;
+    public ColorsManager colorsManager;
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject UI;
     [SerializeField] private GameObject piecePrefab;
@@ -25,7 +24,7 @@ public class GameManager : MonoBehaviour
     private void GeneratePlayersPieces()
     {
         var players = new GameObject("Players");
-        foreach (GameColor color in colors)
+        foreach (GameColor color in colorsManager.colors)
         {
             if (color == GameColor.White) continue;
             var colorGO = new GameObject(color.ToString());
@@ -46,15 +45,10 @@ public class GameManager : MonoBehaviour
 
     public void InitGame(int playersQuantity)
     {
-        colors = Colors.GetColorsByPlayersQty(playersQuantity);
+        colorsManager = new ColorsManager(playersQuantity);
         GeneratePlayersPieces();
         SetMenuVisibility(false);
-        UpdateColor();
-    }
-
-    public void UpdateColor()
-    {
-        currentColor = Colors.GetNextColor(currentColor, colors);
+        colorsManager.UpdateColor();
     }
 
     private void SetMenuVisibility(bool isInMenu)

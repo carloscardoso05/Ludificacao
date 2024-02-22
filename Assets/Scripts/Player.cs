@@ -63,10 +63,10 @@ public class Piece : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (GameManager.I.currentColor == color)
+        if (GameManager.I.colorsManager.currentColor == color)
         {
             MoveToNextTile(GameManager.I.dice.value);
-            GameManager.I.UpdateColor();
+            GameManager.I.colorsManager.UpdateColor();
         }
     }
 }

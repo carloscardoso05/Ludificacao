@@ -3,8 +3,16 @@ using System.Linq;
 
 public enum GameColor { White, Blue, Red, Green, Yellow };
 
-public static class Colors
+public class ColorsManager
 {
+    public GameColor[] colors;
+    public GameColor? currentColor;
+
+    public ColorsManager(int playersQuantity)
+    {
+        colors = GetColorsByPlayersQty(playersQuantity);
+    }
+
     public static GameColor[] GetColorsByPlayersQty(int playersQuantity)
     {
         return playersQuantity switch
@@ -16,16 +24,16 @@ public static class Colors
         };
     }
 
-    public static GameColor GetNextColor(GameColor? currentColor, GameColor[] colors)
+    public void UpdateColor()
     {
         if (currentColor != null)
             for (int i = 0; i < colors.Length; i++)
             {
                 if (currentColor == colors[i])
                 {
-                    return colors[(i + 1) % colors.Length];
+                    currentColor = colors[(i + 1) % colors.Length];
                 }
             }
-        return colors.First();
+        currentColor = colors.First();
     }
 }
