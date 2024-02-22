@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         {
             2 => new GameColor[] { GameColor.Blue, GameColor.Green },
             3 => new GameColor[] { GameColor.Blue, GameColor.Red, GameColor.Green },
-            4 => Enum.GetValues(typeof(GameColor)).Cast<GameColor>().ToArray(),
+            4 => new GameColor[] { GameColor.Blue, GameColor.Red, GameColor.Green, GameColor.Yellow },
             _ => throw new ArgumentOutOfRangeException("Os valores válidos são 2, 3 e 4")
         };
     }
