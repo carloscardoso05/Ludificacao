@@ -19,10 +19,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        MainMenu.SetActive(true);
-        UI.SetActive(false);
-        dice.gameObject.SetActive(false);
-        Board.I.gameObject.SetActive(false);
+        SetMenuVisibility(true);
     }
 
     private void GeneratePlayersPieces()
@@ -51,15 +48,20 @@ public class GameManager : MonoBehaviour
     {
         colors = Colors.GetColorsByPlayersQty(playersQuantity);
         GeneratePlayersPieces();
-        MainMenu.SetActive(false);
-        UI.SetActive(true);
-        dice.gameObject.SetActive(true);
+        SetMenuVisibility(false);
         UpdateColor();
-        Board.I.gameObject.SetActive(true);
     }
 
     public void UpdateColor()
     {
         currentColor = Colors.GetNextColor(currentColor, colors);
+    }
+
+    private void SetMenuVisibility(bool isInMenu)
+    {
+        MainMenu.SetActive(isInMenu);
+        UI.SetActive(!isInMenu);
+        dice.gameObject.SetActive(!isInMenu);
+        Board.I.gameObject.SetActive(!isInMenu);
     }
 }
