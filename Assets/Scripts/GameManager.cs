@@ -1,18 +1,12 @@
 using System;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.U2D.Animation;
-using UnityEngine.UI;
 
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
 public class GameManager : MonoBehaviour
 {
     public static GameManager I;
-    public int diceValue;
-    public Image diceImage;
-    public bool diceIsRolling = false;
-    public SpriteLibraryAsset spriteLibrary;
+    public Dice dice;
     public GameState state = GameState.SelectPlayersNumber;
     private GameColor[] playersColors;
     public GameColor? currentPlayerColor;
@@ -94,21 +88,4 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RollDice()
-    {
-        if (!diceIsRolling)
-        StartCoroutine(RollDiceAnimation());
-    }
-
-    private IEnumerator RollDiceAnimation()
-    {
-        diceIsRolling = true;
-        for (int i = 0; i < 7; i++)
-        {
-            diceValue = UnityEngine.Random.Range(1, 7);
-            diceImage.sprite = spriteLibrary.GetSprite("Dice", diceValue.ToString());
-            yield return new WaitForSeconds(0.2f);
-        }
-        diceIsRolling = false;
-    }
 }

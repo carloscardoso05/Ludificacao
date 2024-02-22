@@ -66,7 +66,7 @@ public class Piece : MonoBehaviour
     {
         if (GameManager.I.currentPlayerColor == color)
         {
-            MoveToNextTile(GameManager.I.diceValue);
+            MoveToNextTile(GameManager.I.dice.value);
             GameManager.I.UpdateCurrentPlayerColor();
         }
     }
