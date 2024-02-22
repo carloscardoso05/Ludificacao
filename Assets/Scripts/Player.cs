@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
-public enum GameColor { White, Blue, Red, Green, Yellow };
 
 public class Piece : MonoBehaviour
 {
@@ -64,10 +63,10 @@ public class Piece : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (GameManager.I.currentPlayerColor == color)
+        if (GameManager.I.currentColor == color)
         {
             MoveToNextTile(GameManager.I.dice.value);
-            GameManager.I.UpdateCurrentPlayerColor();
+            GameManager.I.UpdateColor();
         }
     }
 }

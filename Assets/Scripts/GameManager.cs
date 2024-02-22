@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using UnityEngine;
 
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
@@ -8,8 +6,8 @@ public class GameManager : MonoBehaviour
     public static GameManager I;
     public Dice dice;
     public GameState state = GameState.SelectPlayersNumber;
-    private GameColor[] playersColors;
-    public GameColor? currentPlayerColor;
+    private GameColor[] colors;
+    public GameColor? currentColor;
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject UI;
     [SerializeField] private GameObject piecePrefab;
@@ -30,7 +28,7 @@ public class GameManager : MonoBehaviour
     private void GeneratePlayersPieces()
     {
         var players = new GameObject("Players");
-        foreach (GameColor color in playersColors)
+        foreach (GameColor color in colors)
         {
             if (color == GameColor.White) continue;
             var colorGO = new GameObject(color.ToString());
@@ -49,40 +47,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private GameColor[] GetColorsByPlayersQty(int playersQuantity)
-    {
-        return playersQuantity switch
-        {
-            2 => new GameColor[] { GameColor.Blue, GameColor.Green },
-            3 => new GameColor[] { GameColor.Blue, GameColor.Red, GameColor.Green },
-            4 => new GameColor[] { GameColor.Blue, GameColor.Red, GameColor.Green, GameColor.Yellow },
-            _ => throw new ArgumentOutOfRangeException("Os valores válidos são 2, 3 e 4")
-        };
-    }
-
     public void InitGame(int playersQuantity)
     {
-        playersColors = GetColorsByPlayersQty(playersQuantity);
+        colors = Colors.GetColorsByPlayersQty(playersQuantity);
         GeneratePlayersPieces();
         MainMenu.SetActive(false);
         UI.SetActive(true);
         dice.gameObject.SetActive(true);
-        UpdateCurrentPlayerColor();
+        UpdateColor();
         Board.I.gameObject.SetActive(true);
     }
 
-    public void UpdateCurrentPlayerColor()
+    public void UpdateColor()
     {
-        if (currentPlayerColor != null)
-            for (int i = 0; i < playersColors.Length; i++)
-            {
-                if (currentPlayerColor == playersColors[i])
-                {
-                    currentPlayerColor = playersColors[(i + 1) % playersColors.Length];
-                    return;
-                }
-            }
-        currentPlayerColor = playersColors.First();
+        currentColor = Colors.GetNextColor(currentColor, colors);
     }
-
 }
