@@ -31,8 +31,11 @@ public class Piece : MonoBehaviour
         Path.Current.players.Add(this);
         tilePosition = Path.Current.transform.position;
         inHome = false;
-        SendOthersToHome();
-        while (--times > 0) MoveToNextTile(times);
+        if (!Path.Current.isSafe) SendOthersToHome();
+        if (times > 1)
+        {
+            MoveToNextTile(times - 1);
+        }
     }
 
     public void MoveToHome()
@@ -63,7 +66,7 @@ public class Piece : MonoBehaviour
     {
         if (GameManager.I.currentPlayerColor == color)
         {
-            MoveToNextTile(1);
+            MoveToNextTile(GameManager.I.diceValue);
             GameManager.I.UpdateCurrentPlayerColor();
         }
     }

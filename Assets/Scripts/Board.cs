@@ -39,8 +39,22 @@ public class Board : MonoBehaviour
         {
             var tile = childTransform.gameObject.AddComponent<Tile>();
             tile.color = color;
+            tile.isSafe = false;
             tile.name = color.ToString() + "Tile" + i.ToString();
             i++;
+        }
+        if (color == GameColor.White)
+        {
+            i = 0;
+            foreach (Transform childTransform in path.transform)
+            {
+                var tile = childTransform.gameObject.GetComponent<Tile>();
+                if (i % 13 == 0 || (i > 0 && i % 8 == 0))
+                {
+                    tile.isSafe = true;
+                }
+                i++;
+            }
         }
     }
 

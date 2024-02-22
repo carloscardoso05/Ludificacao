@@ -1,16 +1,23 @@
 using System;
+using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
+using UnityEngine.UI;
 
-public enum GameState { SelectPlayersNumber, Playing, End };
+public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
 public class GameManager : MonoBehaviour
 {
     public static GameManager I;
+    public int diceValue;
+    public Image diceImage;
+    public bool diceIsRolling = false;
+    public SpriteLibraryAsset spriteLibrary;
     public GameState state = GameState.SelectPlayersNumber;
     private GameColor[] playersColors;
     public GameColor? currentPlayerColor;
     [SerializeField] private GameObject MainMenu;
+    [SerializeField] private GameObject UI;
     [SerializeField] private GameObject piecePrefab;
 
     private void Awake()
@@ -21,6 +28,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         MainMenu.SetActive(true);
+        UI.SetActive(false);
         Board.I.gameObject.SetActive(false);
     }
 
@@ -62,6 +70,7 @@ public class GameManager : MonoBehaviour
         playersColors = GetColorsByPlayersQty(playersQuantity);
         GeneratePlayersPieces();
         MainMenu.SetActive(false);
+        UI.SetActive(true);
         UpdateCurrentPlayerColor();
         Board.I.gameObject.SetActive(true);
     }
@@ -83,5 +92,23 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void RollDice()
+    {
+        if (!diceIsRolling)
+        StartCoroutine(RollDiceAnimation());
+    }
+
+    private IEnumerator RollDiceAnimation()
+    {
+        diceIsRolling = true;
+        for (int i = 0; i < 7; i++)
+        {
+            diceValue = UnityEngine.Random.Range(1, 7);
+            diceImage.sprite = spriteLibrary.GetSprite("Dice", diceValue.ToString());
+            yield return new WaitForSeconds(0.2f);
+        }
+        diceIsRolling = false;
     }
 }
