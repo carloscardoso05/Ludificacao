@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     {
         MainMenu.SetActive(true);
         UI.SetActive(false);
+        dice.gameObject.SetActive(false);
         Board.I.gameObject.SetActive(false);
     }
 
@@ -65,18 +66,14 @@ public class GameManager : MonoBehaviour
         GeneratePlayersPieces();
         MainMenu.SetActive(false);
         UI.SetActive(true);
+        dice.gameObject.SetActive(true);
         UpdateCurrentPlayerColor();
         Board.I.gameObject.SetActive(true);
     }
 
     public void UpdateCurrentPlayerColor()
     {
-        if (currentPlayerColor == null)
-        {
-            currentPlayerColor = playersColors.First();
-        }
-        else
-        {
+        if (currentPlayerColor != null)
             for (int i = 0; i < playersColors.Length; i++)
             {
                 if (currentPlayerColor == playersColors[i])
@@ -85,7 +82,7 @@ public class GameManager : MonoBehaviour
                     return;
                 }
             }
-        }
+        currentPlayerColor = playersColors.First();
     }
 
 }

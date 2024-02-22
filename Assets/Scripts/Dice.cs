@@ -1,15 +1,21 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
-using UnityEngine.UI;
 
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(SpriteResolver))]
+[RequireComponent(typeof(SpriteLibrary))]
 public class Dice : MonoBehaviour
 {
-    [SerializeField] private Image diceImage;
-    [SerializeField] private SpriteLibraryAsset spriteLibrary;
-    [HideInInspector] public int value;
+    private SpriteResolver spriteResolver;
+    [HideInInspector] public int value = 1;
     [HideInInspector] public bool diceIsRolling = false;
 
+    private void Start()
+    {
+        spriteResolver = GetComponent<SpriteResolver>();
+    }
     public void RollDice()
     {
         if (!diceIsRolling)
@@ -21,10 +27,15 @@ public class Dice : MonoBehaviour
         diceIsRolling = true;
         for (int i = 0; i < 7; i++)
         {
-            value = UnityEngine.Random.Range(1, 7);
-            diceImage.sprite = spriteLibrary.GetSprite("Dice", value.ToString());
+            value = Random.Range(1, 7);
+            spriteResolver.SetCategoryAndLabel("Dice", value.ToString());
             yield return new WaitForSeconds(0.2f);
         }
         diceIsRolling = false;
+    }
+
+    private void OnMouseDown()
+    {
+        RollDice();
     }
 }
