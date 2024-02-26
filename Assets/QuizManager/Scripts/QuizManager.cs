@@ -11,6 +11,7 @@ class QuizManager : MonoBehaviour
     public event EventHandler<Question> OnChoseQuestion;
     private List<string>[] availableQuestions = new List<string>[3];
     public static QuizManager I;
+    public event EventHandler<bool> OnAnswered;
 
     private void Awake()
     {
@@ -32,8 +33,7 @@ class QuizManager : MonoBehaviour
 
     private void HandleAnswer(object sender, bool correct)
     {
-        answering = false;
-        Debug.Log(correct ? "Parabéns, você acertou" : "Você errou");
+        OnAnswered?.Invoke(sender, correct);
     }
 
     public void SelectQuiz()

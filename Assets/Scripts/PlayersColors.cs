@@ -37,7 +37,6 @@ public class ColorsManager
                 }
             }
         else
-
             currentColor = colors.First();
 
     }

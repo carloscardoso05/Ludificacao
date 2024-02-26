@@ -47,6 +47,9 @@ TagManager:
   - name: Pieces
     uniqueID: 1260974183
     locked: 0
+  - name: Quiz
+    uniqueID: 3264775399
+    locked: 0
   - name: UI
     uniqueID: 491363739
     locked: 0

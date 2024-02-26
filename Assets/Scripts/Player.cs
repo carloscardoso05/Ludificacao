@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -60,8 +61,9 @@ public class Piece : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, tilePosition, Time.deltaTime * 12);
     }
 
-    private void OnMouseDown()
+    private void OnMouseUp()
     {
-        GameManager.I.TryMovePiece(this);
+        if (GameManager.I.colorsManager.currentColor == color) 
+        GameManager.I.MovePiece(this);
     }
 }

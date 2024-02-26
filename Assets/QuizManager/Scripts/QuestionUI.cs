@@ -55,6 +55,7 @@ class QuestionUI : MonoBehaviour
             var answerElement = transform.Find("Answers").Find($"AnswerButton{answerNumber}");
             var buttonText = answerElement.GetComponentInChildren<TextMeshProUGUI>();
             buttonText.text = answer.text;
+            answerElement.GetComponent<Button>().onClick.RemoveAllListeners();
             answerElement.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     OnAnswerSelected?.Invoke(this, answer.correct);
@@ -93,6 +94,7 @@ class QuestionUI : MonoBehaviour
         if (elapsedTime > maxTime)
         {
             Debug.Log("Tempo excedido");
+            OnAnswerSelected?.Invoke(this, false);
             Hide();
         }
     }
