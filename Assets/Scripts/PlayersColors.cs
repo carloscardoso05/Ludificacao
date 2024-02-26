@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using UnityEngine;
 
 public enum GameColor { White, Blue, Red, Green, Yellow };
 
@@ -32,8 +33,12 @@ public class ColorsManager
                 if (currentColor == colors[i])
                 {
                     currentColor = colors[(i + 1) % colors.Length];
+                    break;
                 }
             }
-        currentColor = colors.First();
+        else
+
+            currentColor = colors.First();
+
     }
 }

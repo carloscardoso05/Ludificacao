@@ -10,7 +10,7 @@ public class Piece : MonoBehaviour
     public Vector2 HomePosition;
     public bool inHome = true;
     private int InitialIndex;
-    private NavigationList<Tile> Path;
+    public NavigationList<Tile> Path;
     private Vector2 tilePosition;
 
     private void Start()
@@ -58,15 +58,10 @@ public class Piece : MonoBehaviour
     {
         if ((Vector2)transform.position != tilePosition)
             transform.position = Vector3.Lerp(transform.position, tilePosition, Time.deltaTime * 12);
-
     }
 
     private void OnMouseDown()
     {
-        if (GameManager.I.colorsManager.currentColor == color)
-        {
-            MoveToNextTile(GameManager.I.dice.value);
-            GameManager.I.colorsManager.UpdateColor();
-        }
+        GameManager.I.TryMovePiece(this);
     }
 }

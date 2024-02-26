@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject UI;
     [SerializeField] private GameObject piecePrefab;
 
+    #region Unity Life Cycle
+
     private void Awake()
     {
         I = this;
@@ -20,6 +23,23 @@ public class GameManager : MonoBehaviour
     {
         SetMenuVisibility(true);
     }
+
+    #endregion
+
+    #region Game Mechanics
+
+    public void TryMovePiece(Piece piece)
+    {
+        if (colorsManager.currentColor == piece.color)
+        {
+            piece.MoveToNextTile(dice.value);
+            colorsManager.UpdateColor();
+        }
+    }
+
+    #endregion
+
+    #region Misc
 
     private void GeneratePlayersPieces()
     {
@@ -58,4 +78,6 @@ public class GameManager : MonoBehaviour
         dice.gameObject.SetActive(!isInMenu);
         Board.I.gameObject.SetActive(!isInMenu);
     }
+
+    #endregion
 }
