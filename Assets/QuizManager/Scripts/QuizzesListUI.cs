@@ -23,7 +23,7 @@ class QuizzesListUI : MonoBehaviour
     {
         QuizProvider.OnGetQuizzes += LoadQuizzes;
         ListView.selectionType = SelectionType.Single;
-        ListView.onItemsChosen += OnQuizChosen;
+        ListView.itemsChosen += OnQuizChosen;
         TextField.RegisterCallback<ChangeEvent<string>>(searchChanged);
     }
 

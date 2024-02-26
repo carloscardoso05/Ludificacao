@@ -50,7 +50,7 @@ class QuizManager : MonoBehaviour
             throw new Exception("Não pode selecionar um quiz enquanto responde a uma questão");
         }
         QuizzesListUI.I.Show();
-        QuizzesListUI.I.ListView.onItemsChosen += (_) => selectingQuiz = false;
+        QuizzesListUI.I.ListView.itemsChosen += (_) => selectingQuiz = false;
         selectingQuiz = true;
     }
 
