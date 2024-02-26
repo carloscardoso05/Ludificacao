@@ -41,10 +41,10 @@ public class GameManager : MonoBehaviour
         QuizManager.I.SelectQuestion(rnd);
     }
 
-    private void HandleAnswer(object sender, bool correct)
+    private void HandleAnswer(object sender, AnswerData answerData)
     {
-        if (correct)
-        currentPiece.MoveToNextTile(dice.value);
+        if (answerData.selectedAnswer.correct)
+            currentPiece.MoveToNextTile(dice.value + answerData.question.difficulty + 1);
         colorsManager.UpdateColor();
     }
 

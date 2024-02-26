@@ -11,7 +11,7 @@ class QuizManager : MonoBehaviour
     public event EventHandler<Question> OnChoseQuestion;
     private List<string>[] availableQuestions = new List<string>[3];
     public static QuizManager I;
-    public event EventHandler<bool> OnAnswered;
+    public event EventHandler<AnswerData> OnAnswered;
     public event EventHandler<Quiz> OnSelectedQuiz;
 
     private void Awake()
@@ -33,9 +33,9 @@ class QuizManager : MonoBehaviour
         QuestionUI.I.OnAnswerSelected += HandleAnswer;
     }
 
-    private void HandleAnswer(object sender, bool correct)
+    private void HandleAnswer(object sender, AnswerData answerData)
     {
-        OnAnswered?.Invoke(sender, correct);
+        OnAnswered?.Invoke(sender, answerData);
     }
 
     private void HandleSelectedQuiz(object sender, Quiz quiz)

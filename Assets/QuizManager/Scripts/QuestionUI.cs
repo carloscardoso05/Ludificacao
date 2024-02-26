@@ -8,10 +8,11 @@ using UnityEngine.UI;
 
 class QuestionUI : MonoBehaviour
 {
-    public event EventHandler<bool> OnAnswerSelected;
+    public event EventHandler<AnswerData> OnAnswerSelected;
     private bool QuestionRuning = false;
     private float maxTime;
     private float elapsedTime;
+    private Question currentQuestion;
     private readonly string[] difficultiesPtBr = { "Fácil", "Média", "Difícil" };
     private readonly int[] timesForDifficulties = { 15, 30, 60 };
     private readonly Color[] difficultiesBGColors = { Color.green, Color.yellow, Color.red };
@@ -35,6 +36,7 @@ class QuestionUI : MonoBehaviour
 
     private void Render(Question question)
     {
+        currentQuestion = question;
         PrepareQuestion(question.question);
         PrepareAnswers(question.answers);
         PrepareDifficulty(question.difficulty);
@@ -58,7 +60,7 @@ class QuestionUI : MonoBehaviour
             answerElement.GetComponent<Button>().onClick.RemoveAllListeners();
             answerElement.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    OnAnswerSelected?.Invoke(this, answer.correct);
+                    OnAnswerSelected?.Invoke(this, new AnswerData(currentQuestion, answer, elapsedTime));
                     Hide();
                 }
             );
@@ -94,7 +96,7 @@ class QuestionUI : MonoBehaviour
         if (elapsedTime > maxTime)
         {
             Debug.Log("Tempo excedido");
-            OnAnswerSelected?.Invoke(this, false);
+            OnAnswerSelected?.Invoke(this, new AnswerData(currentQuestion, null, maxTime));
             Hide();
         }
     }
