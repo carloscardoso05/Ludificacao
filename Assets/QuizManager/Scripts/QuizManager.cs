@@ -12,6 +12,7 @@ class QuizManager : MonoBehaviour
     private List<string>[] availableQuestions = new List<string>[3];
     public static QuizManager I;
     public event EventHandler<bool> OnAnswered;
+    public event EventHandler<Quiz> OnSelectedQuiz;
 
     private void Awake()
     {
@@ -28,12 +29,19 @@ class QuizManager : MonoBehaviour
                 availableQuestions[i] = Quiz.questions.Keys.Where((id) => Quiz.questions[id].difficulty == i).ToList();
             }
         };
+        QuizzesListUI.I.OnQuizSelected += HandleSelectedQuiz;
         QuestionUI.I.OnAnswerSelected += HandleAnswer;
+        SelectQuiz();
     }
 
     private void HandleAnswer(object sender, bool correct)
     {
         OnAnswered?.Invoke(sender, correct);
+    }
+
+    private void HandleSelectedQuiz(object sender, Quiz quiz)
+    {
+        OnSelectedQuiz?.Invoke(sender, quiz);
     }
 
     public void SelectQuiz()

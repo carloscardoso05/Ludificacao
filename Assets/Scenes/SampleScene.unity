@@ -2164,7 +2164,6 @@ MonoBehaviour:
   dice: {fileID: 788069574}
   state: 0
   MainMenu: {fileID: 1674711795}
-  UI: {fileID: 0}
   piecePrefab: {fileID: 3988960865634890721, guid: 0c63b66e00107994f8f49c19463cb2fc, type: 3}
 --- !u!4 &837446759
 Transform:
@@ -3100,50 +3099,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 308798804913508709, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_fontSize
-      value: 15.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 308798805165858828, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_fontSize
-      value: 15.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 308798805255998041, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_fontSize
-      value: 15.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 308798806316676506, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_fontSize
-      value: 15.2
+    - target: {fileID: 308798806027244596, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 308798806460747921, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_Name
       value: QuizManager
       objectReference: {fileID: 0}
-    - target: {fileID: 308798806460747921, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 308798806460747924, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
-    - target: {fileID: 308798806460747924, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_RenderMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 308798806460747924, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_PixelPerfect
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 308798806460747924, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1030191897
-      objectReference: {fileID: 0}
-    - target: {fileID: 308798806460747924, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
-      propertyPath: m_UpdateRectTransformForStandalone
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 308798806460747925, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3227,6 +3194,10 @@ PrefabInstance:
     - target: {fileID: 308798806460747925, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665800689238239754, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
+      propertyPath: m_Color.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

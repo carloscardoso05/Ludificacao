@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public GameState state = GameState.SelectPlayersNumber;
     public ColorsManager colorsManager;
     [SerializeField] private GameObject MainMenu;
-    [SerializeField] private GameObject UI;
+    // [SerializeField] private GameObject UI;
     [SerializeField] private GameObject piecePrefab;
     private Piece currentPiece;
 
@@ -21,7 +21,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetMenuVisibility(true);
+        SetMenuVisibility(false);
+        QuizManager.I.OnSelectedQuiz += (sender, quiz) =>
+        {
+            SetMenuVisibility(true);
+        };
         QuizManager.I.OnAnswered += HandleAnswer;
     }
 
@@ -38,8 +42,8 @@ public class GameManager : MonoBehaviour
 
     private void HandleAnswer(object sender, bool correct)
     {
-        // if (correct)
-            currentPiece.MoveToNextTile(dice.value);
+        if (correct)
+        currentPiece.MoveToNextTile(dice.value);
         colorsManager.UpdateColor();
         print(colorsManager.currentColor);
     }
@@ -72,7 +76,6 @@ public class GameManager : MonoBehaviour
 
     public void InitGame(int playersQuantity)
     {
-        QuizManager.I.SelectQuiz();
         colorsManager = new ColorsManager(playersQuantity);
         GeneratePlayersPieces();
         SetMenuVisibility(false);
@@ -82,7 +85,7 @@ public class GameManager : MonoBehaviour
     private void SetMenuVisibility(bool isInMenu)
     {
         MainMenu.SetActive(isInMenu);
-        UI.SetActive(!isInMenu);
+        // UI.SetActive(!isInMenu);
         dice.gameObject.SetActive(!isInMenu);
         Board.I.gameObject.SetActive(!isInMenu);
     }
