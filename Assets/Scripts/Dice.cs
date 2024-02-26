@@ -25,11 +25,13 @@ public class Dice : MonoBehaviour
     private IEnumerator RollDiceAnimation()
     {
         diceIsRolling = true;
-        for (int i = 0; i < 7; i++)
+        var prev = value;
+        for (int i = 0; i < 5; i++)
         {
-            value = Random.Range(1, 7);
+            while (value == prev) value = Random.Range(1, 7);
+            prev = value;
             spriteResolver.SetCategoryAndLabel("Dice", value.ToString());
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
         }
         diceIsRolling = false;
     }
