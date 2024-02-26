@@ -21,7 +21,6 @@ class QuizzesListUI : MonoBehaviour
 
     private void Start()
     {
-        Hide();
         QuizProvider.OnGetQuizzes += LoadQuizzes;
         ListView.selectionType = SelectionType.Single;
         ListView.onItemsChosen += OnQuizChosen;

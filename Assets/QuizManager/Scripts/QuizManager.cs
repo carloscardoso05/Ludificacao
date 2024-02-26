@@ -31,7 +31,6 @@ class QuizManager : MonoBehaviour
         };
         QuizzesListUI.I.OnQuizSelected += HandleSelectedQuiz;
         QuestionUI.I.OnAnswerSelected += HandleAnswer;
-        SelectQuiz();
     }
 
     private void HandleAnswer(object sender, bool correct)

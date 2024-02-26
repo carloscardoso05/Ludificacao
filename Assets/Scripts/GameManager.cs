@@ -22,11 +22,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetMenuVisibility(false);
+        QuizManager.I.OnAnswered += HandleAnswer;
         QuizManager.I.OnSelectedQuiz += (sender, quiz) =>
         {
             SetMenuVisibility(true);
         };
-        QuizManager.I.OnAnswered += HandleAnswer;
+        QuizManager.I.SelectQuiz();
     }
 
     #endregion
@@ -45,7 +46,6 @@ public class GameManager : MonoBehaviour
         if (correct)
         currentPiece.MoveToNextTile(dice.value);
         colorsManager.UpdateColor();
-        print(colorsManager.currentColor);
     }
 
     #endregion
