@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject piecePrefab;
     private Piece currentPiece;
+    public event EventHandler<GameColor> OnTurnChanged;
 
     #region Unity Life Cycle
 
@@ -36,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     public void MovePiece(Piece piece)
     {
-        var rnd = Random.Range(0, 3);
+        var rnd = UnityEngine.Random.Range(0, 3);
         currentPiece = piece;
         QuizManager.I.SelectQuestion(rnd);
     }
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
         if (answerData.selectedAnswer.correct)
             currentPiece.MoveToNextTile(dice.value + answerData.question.difficulty + 1);
         colorsManager.UpdateColor();
+        OnTurnChanged?.Invoke(this, colorsManager.currentColor);
         diceWasRolled = false;
     }
 
@@ -80,7 +83,7 @@ public class GameManager : MonoBehaviour
         colorsManager = new ColorsManager(playersQuantity);
         GeneratePlayersPieces();
         SetMenuVisibility(false);
-        colorsManager.UpdateColor();
+        OnTurnChanged?.Invoke(this, colorsManager.currentColor);
     }
 
     private void SetMenuVisibility(bool isInMenu)

@@ -1,17 +1,17 @@
 using System;
 using System.Linq;
-using UnityEngine;
 
 public enum GameColor { White, Blue, Red, Green, Yellow };
 
 public class ColorsManager
 {
     public GameColor[] colors;
-    public GameColor? currentColor;
+    public GameColor currentColor;
 
     public ColorsManager(int playersQuantity)
     {
         colors = GetColorsByPlayersQty(playersQuantity);
+        currentColor = colors.First();
     }
 
     public static GameColor[] GetColorsByPlayersQty(int playersQuantity)
@@ -27,17 +27,11 @@ public class ColorsManager
 
     public void UpdateColor()
     {
-        if (currentColor != null)
-            for (int i = 0; i < colors.Length; i++)
+        for (int i = 0; i < colors.Length; i++)
+            if (currentColor == colors[i])
             {
-                if (currentColor == colors[i])
-                {
-                    currentColor = colors[(i + 1) % colors.Length];
-                    break;
-                }
+                currentColor = colors[(i + 1) % colors.Length];
+                break;
             }
-        else
-            currentColor = colors.First();
-
     }
 }
