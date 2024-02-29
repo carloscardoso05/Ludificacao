@@ -5,10 +5,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager I;
     public Dice dice;
+    public bool diceWasRolled = false;
     public GameState state = GameState.SelectPlayersNumber;
     public ColorsManager colorsManager;
     [SerializeField] private GameObject MainMenu;
-    // [SerializeField] private GameObject UI;
     [SerializeField] private GameObject piecePrefab;
     private Piece currentPiece;
 
@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
         if (answerData.selectedAnswer.correct)
             currentPiece.MoveToNextTile(dice.value + answerData.question.difficulty + 1);
         colorsManager.UpdateColor();
+        diceWasRolled = false;
     }
 
     #endregion
@@ -85,7 +86,6 @@ public class GameManager : MonoBehaviour
     private void SetMenuVisibility(bool isInMenu)
     {
         MainMenu.SetActive(isInMenu);
-        // UI.SetActive(!isInMenu);
         dice.gameObject.SetActive(!isInMenu);
         Board.I.gameObject.SetActive(!isInMenu);
     }

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -63,7 +62,7 @@ public class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (GameManager.I.colorsManager.currentColor == color) 
+        if (GameManager.I.colorsManager.currentColor == color && GameManager.I.diceWasRolled) 
         GameManager.I.MovePiece(this);
     }
 }

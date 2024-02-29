@@ -18,11 +18,11 @@ public class Dice : MonoBehaviour
     }
     public void RollDice()
     {
-        if (!diceIsRolling)
-            StartCoroutine(RollDiceAnimation());
+        if (!diceIsRolling && !GameManager.I.diceWasRolled)
+            StartCoroutine(RollDiceCore());
     }
 
-    private IEnumerator RollDiceAnimation()
+    private IEnumerator RollDiceCore()
     {
         diceIsRolling = true;
         var prev = value;
@@ -34,6 +34,7 @@ public class Dice : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         diceIsRolling = false;
+        GameManager.I.diceWasRolled = true;
     }
 
     private void OnMouseDown()
