@@ -14,7 +14,7 @@ class QuestionUI : MonoBehaviour
     private float elapsedTime;
     private Question currentQuestion;
     private readonly string[] difficultiesPtBr = { "Fácil", "Média", "Difícil" };
-    private readonly int[] timesForDifficulties = { 15, 30, 60 };
+    private float[] timesForDifficulties;
     private readonly Color[] difficultiesBGColors = { Color.green, Color.yellow, Color.red };
     public static QuestionUI I;
 
@@ -36,6 +36,11 @@ class QuestionUI : MonoBehaviour
 
     private void Render(Question question)
     {
+        timesForDifficulties = new float[] {
+            Settings.I.GetDifficultyTimer(0),
+            Settings.I.GetDifficultyTimer(1),
+            Settings.I.GetDifficultyTimer(2),
+        };
         currentQuestion = question;
         PrepareQuestion(question.question);
         PrepareAnswers(question.answers);
@@ -103,13 +108,13 @@ class QuestionUI : MonoBehaviour
 
     public void Show()
     {
-        transform.parent.gameObject.SetActive(true);
+        gameObject.SetActive(true);
         QuestionRuning = true;
     }
 
     public void Hide()
     {
-        transform.parent.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         QuestionRuning = false;
     }
 }

@@ -4,15 +4,15 @@ using UnityEngine;
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameObject piecePrefab;
     public static GameManager I;
     public Dice dice;
     public bool diceWasRolled = false;
     public GameState state = GameState.SelectPlayersNumber;
     public ColorsManager colorsManager;
-    [SerializeField] private GameObject MainMenu;
-    [SerializeField] private GameObject piecePrefab;
     private Piece currentPiece;
     public event EventHandler<GameColor> OnTurnChanged;
+    public event EventHandler<Piece> OnGameEnded;
 
     #region Unity Life Cycle
 
@@ -46,7 +46,12 @@ public class GameManager : MonoBehaviour
     private void HandleAnswer(object sender, AnswerData answerData)
     {
         if (answerData.selectedAnswer.correct)
-            currentPiece.MoveToNextTile(dice.value + answerData.question.difficulty + 1);
+        {
+            currentPiece.MoveToNextTile(dice.value + Settings.I.GetDifficultyBonus(answerData.question.difficulty));
+            var pieceTile = currentPiece.Path.Current;
+            if (pieceTile.isFinal && pieceTile.players.Count == 2)
+                OnGameEnded?.Invoke(this, currentPiece);
+        }
         colorsManager.UpdateColor();
         OnTurnChanged?.Invoke(this, colorsManager.currentColor);
         diceWasRolled = false;
@@ -88,7 +93,7 @@ public class GameManager : MonoBehaviour
 
     private void SetMenuVisibility(bool isInMenu)
     {
-        MainMenu.SetActive(isInMenu);
+        UiManager.I.SetActiveMainMenu(isInMenu);
         dice.gameObject.SetActive(!isInMenu);
         Board.I.gameObject.SetActive(!isInMenu);
     }

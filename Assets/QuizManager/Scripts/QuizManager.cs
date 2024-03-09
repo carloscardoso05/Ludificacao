@@ -5,6 +5,7 @@ using UnityEngine;
 
 class QuizManager : MonoBehaviour
 {
+    [SerializeField] private CanvasRenderer questionPanel;
     private Quiz Quiz;
     private bool answering = false;
     public bool selectingQuiz = false;
@@ -30,10 +31,10 @@ class QuizManager : MonoBehaviour
             }
         };
         QuizzesListUI.I.OnQuizSelected += HandleSelectedQuiz;
-        QuestionUI.I.OnAnswerSelected += HandleAnswer;
+        QuestionUI.I.OnAnswerSelected += PropagateAnswer;
     }
 
-    private void HandleAnswer(object sender, AnswerData answerData)
+    private void PropagateAnswer(object sender, AnswerData answerData)
     {
         OnAnswered?.Invoke(sender, answerData);
     }

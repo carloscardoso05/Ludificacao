@@ -85,6 +85,7 @@ public class Board : MonoBehaviour
         List<Tile> tilesList = whiteTiles.Skip(startIndex).Concat(whiteTiles.Take(startIndex)).Concat(colorTiles).ToList();
         tilesList.ForEach((t) => path.Add(t));
         path.RemoveAt(tilesList.Count - colorTiles.Count - 1);
+        path.Last().isFinal = true;
         return path;
     }
 
