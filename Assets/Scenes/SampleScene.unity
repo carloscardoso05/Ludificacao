@@ -3754,7 +3754,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.0875, y: 0.2466667}
   m_AnchorMax: {x: 0.9075001, y: 0.5977777}
-  m_AnchoredPosition: {x: -0.0025024414, y: -0.0012588501}
+  m_AnchoredPosition: {x: -0.0025024414, y: -0.0012664795}
   m_SizeDelta: {x: -0.0050049, y: 0.0025024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &754564270
@@ -4769,6 +4769,7 @@ GameObject:
   - component: {fileID: 943504018}
   - component: {fileID: 943504017}
   - component: {fileID: 943504016}
+  - component: {fileID: 943504019}
   m_Layer: 5
   m_Name: EndGame
   m_TagString: Untagged
@@ -4836,6 +4837,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &943504019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943504015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 952a9dbd5b5bbe74cb3a9e85fb03ff7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blueScreen: {fileID: 2102239910, guid: 65450bd1aba937a45bff475ae36991f6, type: 3}
+  redScreen: {fileID: 591182044, guid: b3eaeb65e8065e547b42636888746454, type: 3}
+  greenScreen: {fileID: 567545223, guid: 8373d2f89e57aab47a5d2249625d5135, type: 3}
+  yellowScreen: {fileID: 1618334649, guid: 87edbd52bf0b4a2459b608706199ab8b, type: 3}
 --- !u!1 &953365853
 GameObject:
   m_ObjectHideFlags: 0
@@ -5372,7 +5389,7 @@ GameObject:
   - component: {fileID: 1051045646}
   - component: {fileID: 1051045645}
   - component: {fileID: 1051045644}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: UiManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7025,6 +7042,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 308798806027244594, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 308798806460747921, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_Name
       value: QuizManager
@@ -7120,6 +7141,10 @@ PrefabInstance:
     - target: {fileID: 308798806460747925, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 308798806547061003, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

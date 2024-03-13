@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UiManager : MonoBehaviour
 {
-    public CanvasRenderer EndGameScreen;
+    public EndGame EndGameScreen;
     public CanvasRenderer Settings;
     public CanvasRenderer MainMenu;
     public static UiManager I;
@@ -35,7 +35,7 @@ public class UiManager : MonoBehaviour
             {GameColor.Yellow, "Amarelo"},
         };
         EndGameScreen.transform.Find("Nome").GetComponent<TextMeshProUGUI>().text = $"Jogador {colorsPtBr[winner.color]} ganhou !";
-        ShowEndGame();
+        ShowEndGame(winner.color);
     }
 
     public void ShowSettings()
@@ -54,6 +54,6 @@ public class UiManager : MonoBehaviour
     public void HideMainMenu() => MainMenu.gameObject.SetActive(false);
     public void SetActiveMainMenu(bool active) => MainMenu.gameObject.SetActive(active);
 
-    public void ShowEndGame() => EndGameScreen.gameObject.SetActive(true);
+    public void ShowEndGame(GameColor winnerColor) => EndGameScreen.ShowEndGameScreen(winnerColor);
     public void HideEndGame() => EndGameScreen.gameObject.SetActive(false);
 }
