@@ -28,8 +28,6 @@ public class PlayerIcon : MonoBehaviour
     {
         if (currentIcon != null)
         {
-            var scale = currentIcon.transform.localScale;
-            print(scale);
             var x = (float)(math.sin(Time.time) + 2) / 3;
             var y = (float)(math.sin(Time.time) + 2) / 3;
             var newScale = new Vector3(x, y, 1);

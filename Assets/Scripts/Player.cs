@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -30,10 +31,13 @@ public class Piece : MonoBehaviour
         Path.Current.players.Add(this);
         tilePosition = Path.Current.transform.position;
         inHome = false;
-        if (!Path.Current.isSafe) SendOthersToHome();
         if (times > 1)
         {
             MoveToNextTile(times - 1);
+        }
+        else
+        {
+            if (!Path.Current.isSafe) SendOthersToHome();
         }
     }
 
@@ -62,7 +66,7 @@ public class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (GameManager.I.colorsManager.currentColor == color && GameManager.I.diceWasRolled) 
-        GameManager.I.MovePiece(this);
+        if (GameManager.I.colorsManager.currentColor == color && GameManager.I.diceWasRolled && Path.Next != Path.Current)
+            GameManager.I.MovePiece(this);
     }
 }
