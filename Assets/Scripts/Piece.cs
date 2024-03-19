@@ -63,12 +63,23 @@ public class Piece : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, tilePosition, Time.deltaTime * 12);
     }
 
+    private static bool CanMove(Piece piece)
+    {
+        return GameManager.I.colorsManager.currentColor == piece.color && GameManager.I.diceWasRolled && piece.Path.Next != piece.Path.Current;
+    }
+
     private void OnMouseUp()
     {
+        if (inHome && CanMove(this))
+        {
+            GameManager.I.MovePiece(this);
+            return;
+        }
+
         // Tenta aplicar a ação de mover a cada peça na casa, assim não há problemas com sobreposição
         foreach (Piece piece in Path.Current.players)
         {
-            if (GameManager.I.colorsManager.currentColor == piece.color && GameManager.I.diceWasRolled && piece.Path.Next != piece.Path.Current)
+            if (CanMove(piece))
             {
                 GameManager.I.MovePiece(piece);
                 break;
