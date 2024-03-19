@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,11 @@ public class UiManager : MonoBehaviour
     public CanvasRenderer Settings;
     public CanvasRenderer MainMenu;
     public static UiManager I;
+    public PlayerIcon playersInfo;
+    private TextMeshProUGUI BluePoints;
+    private TextMeshProUGUI RedPoints;
+    private TextMeshProUGUI GreenPoints;
+    private TextMeshProUGUI YellowPoints;
 
     private void Awake()
     {
@@ -18,6 +24,10 @@ public class UiManager : MonoBehaviour
     void Start()
     {
         GameManager.I.OnGameEnded += EndGame;
+        BluePoints = playersInfo.transform.Find("BlueInfo").GetComponentInChildren<TextMeshProUGUI>();
+        RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshProUGUI>();
+        GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshProUGUI>();
+        YellowPoints = playersInfo.transform.Find("YellowInfo").GetComponentInChildren<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -56,4 +66,20 @@ public class UiManager : MonoBehaviour
 
     public void ShowEndGame(GameColor winnerColor) => EndGameScreen.ShowEndGameScreen(winnerColor);
     public void HideEndGame() => EndGameScreen.gameObject.SetActive(false);
+
+    public void UpdatePoints(GameColor currentColor, int points)
+    {
+        switch (currentColor)
+        {
+            case GameColor.Blue:
+                BluePoints.text = points.ToString(); break;
+            case GameColor.Red:
+                RedPoints.text = points.ToString(); break;
+            case GameColor.Green:
+                GreenPoints.text = points.ToString(); break;
+            case GameColor.Yellow:
+                YellowPoints.text = points.ToString(); break;
+            default: throw new ArgumentException("Branco não é válido");
+        }
+    }
 }

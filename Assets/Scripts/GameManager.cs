@@ -52,18 +52,19 @@ public class GameManager : MonoBehaviour
 
     private void HandleAnswer(object sender, AnswerData answerData)
     {
+        var currentColor = colorsManager.currentColor;
         if (answerData.selectedAnswer.correct)
         {
             currentPiece.MoveToNextTile(dice.value + Settings.I.GetDifficultyBonus(answerData.question.difficulty));
             var pieceTile = currentPiece.Path.Current;
             var questionPoints = new int[] { 100, 200, 300 };
-            playersPoints[colorsManager.currentColor] += questionPoints[answerData.question.difficulty];
-            print($"{colorsManager.currentColor}: {playersPoints[colorsManager.currentColor]}");
+            playersPoints[currentColor] += questionPoints[answerData.question.difficulty];
+            UiManager.I.UpdatePoints(currentColor, playersPoints[currentColor]);
             if (pieceTile.isFinal && pieceTile.players.Count == 2)
                 OnGameEnded?.Invoke(this, currentPiece);
         }
         colorsManager.UpdateColor();
-        OnTurnChanged?.Invoke(this, colorsManager.currentColor);
+        OnTurnChanged?.Invoke(this, currentColor);
         diceWasRolled = false;
     }
 
