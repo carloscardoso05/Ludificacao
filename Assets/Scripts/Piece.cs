@@ -65,7 +65,14 @@ public class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (GameManager.I.colorsManager.currentColor == color && GameManager.I.diceWasRolled && Path.Next != Path.Current)
-            GameManager.I.MovePiece(this);
+        // Tenta aplicar a ação de mover a cada peça na casa, assim não há problemas com sobreposição
+        foreach (Piece piece in Path.Current.players)
+        {
+            if (GameManager.I.colorsManager.currentColor == piece.color && GameManager.I.diceWasRolled && piece.Path.Next != piece.Path.Current)
+            {
+                GameManager.I.MovePiece(piece);
+                break;
+            }
+        }
     }
 }

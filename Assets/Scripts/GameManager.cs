@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
@@ -13,6 +14,12 @@ public class GameManager : MonoBehaviour
     private Piece currentPiece;
     public event EventHandler<GameColor> OnTurnChanged;
     public event EventHandler<Piece> OnGameEnded;
+    public Dictionary<GameColor, int> playersPoints = new() {
+        {GameColor.Blue, 0},
+        {GameColor.Red, 0},
+        {GameColor.Green, 0},
+        {GameColor.Yellow, 0},
+    };
 
     #region Unity Life Cycle
 
@@ -49,6 +56,9 @@ public class GameManager : MonoBehaviour
         {
             currentPiece.MoveToNextTile(dice.value + Settings.I.GetDifficultyBonus(answerData.question.difficulty));
             var pieceTile = currentPiece.Path.Current;
+            var questionPoints = new int[] { 100, 200, 300 };
+            playersPoints[colorsManager.currentColor] += questionPoints[answerData.question.difficulty];
+            print($"{colorsManager.currentColor}: {playersPoints[colorsManager.currentColor]}");
             if (pieceTile.isFinal && pieceTile.players.Count == 2)
                 OnGameEnded?.Invoke(this, currentPiece);
         }

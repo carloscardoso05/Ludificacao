@@ -3,12 +3,8 @@ using UnityEngine;
 
 public class Settings : MonoBehaviour
 {
-    public int easyBonus;
-    public int mediumBonus;
-    public int hardBonus;
-    public float easyTimer;
-    public float mediumTimer;
-    public float hardTimer;
+    private DifficultyBonus difficultyBonus;
+    private DifficultyTimer difficultyTimer;
     public static Settings I;
 
     private void Awake()
@@ -16,13 +12,18 @@ public class Settings : MonoBehaviour
         I = this;
     }
 
+    private void Start() {
+        difficultyBonus = DifficultyBonus.I;
+        difficultyTimer = DifficultyTimer.I;
+    }
+
     public int GetDifficultyBonus(int difficulty)
     {
         return difficulty switch
         {
-            0 => easyBonus,
-            1 => mediumBonus,
-            2 => hardBonus,
+            0 => difficultyBonus.easyBonus,
+            1 => difficultyBonus.mediumBonus,
+            2 => difficultyBonus.hardBonus,
             _ => throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
         };
     }
@@ -31,9 +32,9 @@ public class Settings : MonoBehaviour
     {
         return difficulty switch
         {
-            0 => easyTimer,
-            1 => mediumTimer,
-            2 => hardTimer,
+            0 => difficultyTimer.easyTimer,
+            1 => difficultyTimer.mediumTimer,
+            2 => difficultyTimer.hardTimer,
             _ => throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
         };
     }
@@ -45,11 +46,11 @@ public class Settings : MonoBehaviour
             switch (difficulty)
             {
                 case 0:
-                    easyTimer = float.Parse(newTimer); break;
+                    difficultyTimer.easyTimer = float.Parse(newTimer); break;
                 case 1:
-                    mediumTimer = float.Parse(newTimer); break;
+                    difficultyTimer.mediumTimer = float.Parse(newTimer); break;
                 case 2:
-                    hardTimer = float.Parse(newTimer); break;
+                    difficultyTimer.hardTimer = float.Parse(newTimer); break;
                 default:
                     throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
             }
@@ -62,11 +63,11 @@ public class Settings : MonoBehaviour
             switch (difficulty)
             {
                 case 0:
-                    easyBonus = int.Parse(newBonus); break;
+                    difficultyBonus.easyBonus = int.Parse(newBonus); break;
                 case 1:
-                    mediumBonus = int.Parse(newBonus); break;
+                    difficultyBonus.mediumBonus = int.Parse(newBonus); break;
                 case 2:
-                    hardBonus = int.Parse(newBonus); break;
+                    difficultyBonus.hardBonus = int.Parse(newBonus); break;
                 default:
                     throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
             }
