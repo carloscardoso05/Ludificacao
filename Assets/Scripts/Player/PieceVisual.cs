@@ -56,6 +56,7 @@ public class PieceVisual : MonoBehaviour
     {
         tilePosition = HomePosition;
         cursorPosition = HomePosition;
+        animationEnded = false;
     }
 
     public void UpdateTileAndCursorPosition(object sender, Piece.OnPieceChangedTileEventArgs args)
@@ -68,7 +69,6 @@ public class PieceVisual : MonoBehaviour
 
     private List<Vector3> GetOffsetedPositions(Tile tile)
     {
-        // var bounds = tile.gameObject.GetComponent<Renderer>().bounds;
         var sizeX = 1;
         var position = tile.gameObject.transform.position;
         var start = position.x - sizeX / 2;

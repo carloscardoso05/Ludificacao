@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(PieceVisual))]
@@ -47,7 +46,7 @@ public class Piece : MonoBehaviour
 
     private void SendOthersToHome(object sender, EventArgs args)
     {
-        if (Path.Current.isSafe)
+        if (!Path.Current.isSafe)
         {
             foreach (Piece p in Path.Current.pieces)
             {
@@ -62,15 +61,6 @@ public class Piece : MonoBehaviour
         Path.CurrentIndex = 0;
         visual.SendHome();
     }
-
-    // private void SendOthersToHome()
-    // {
-    //     Path.Current.players.ForEach((p) =>
-    //     {
-    //         if (p.color != color) p.MoveToHome();
-    //     });
-    // }
-
 
     private static bool CanMove(Piece piece)
     {
