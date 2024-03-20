@@ -10,30 +10,23 @@ public class UiManager : MonoBehaviour
     public CanvasRenderer MainMenu;
     public static UiManager I;
     public PlayerIcon playersInfo;
-    private TextMeshProUGUI BluePoints;
-    private TextMeshProUGUI RedPoints;
-    private TextMeshProUGUI GreenPoints;
-    private TextMeshProUGUI YellowPoints;
+    private TextMeshPro BluePoints;
+    private TextMeshPro RedPoints;
+    private TextMeshPro GreenPoints;
+    private TextMeshPro YellowPoints;
 
     private void Awake()
     {
         I = this;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         GameManager.I.OnGameEnded += EndGame;
-        BluePoints = playersInfo.transform.Find("BlueInfo").GetComponentInChildren<TextMeshProUGUI>();
-        RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshProUGUI>();
-        GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshProUGUI>();
-        YellowPoints = playersInfo.transform.Find("YellowInfo").GetComponentInChildren<TextMeshProUGUI>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        BluePoints = playersInfo.transform.Find("BlueInfo").GetComponentInChildren<TextMeshPro>();
+        RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshPro>();
+        GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshPro>();
+        YellowPoints = playersInfo.transform.Find("YellowInfo").GetComponentInChildren<TextMeshPro>();
     }
 
     private void EndGame(object sender, Piece winner)
