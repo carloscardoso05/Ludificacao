@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
             var questionPoints = new int[] { 100, 200, 300 };
             playersPoints[currentColor] += questionPoints[answerData.question.difficulty];
             UiManager.I.UpdatePoints(currentColor, playersPoints[currentColor]);
-            if (pieceTile.isFinal && pieceTile.players.Count == 2)
+            if (pieceTile.isFinal && pieceTile.pieces.Count == 2)
                 OnGameEnded?.Invoke(this, currentPiece);
         }
         colorsManager.UpdateColor();
@@ -83,13 +83,14 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 var piece = Instantiate(piecePrefab).GetComponent<Piece>();
+                var visual = piece.GetComponent<PieceVisual>();
                 piece.name = "Piece" + i.ToString();
                 piece.transform.parent = colorGO.transform;
                 Vector2 homePosition = Board.I.GetHome(color).transform.position;
                 Vector2 offset = Board.I.GetHomeOffset(i);
-                piece.HomePosition = homePosition + offset;
+                visual.HomePosition = homePosition + offset;
                 piece.color = color;
-                piece.spriteResolver.SetCategoryAndLabel("Body", color.ToString());
+                visual.spriteResolver.SetCategoryAndLabel("Body", color.ToString());
             }
         }
     }

@@ -5,5 +5,5 @@ public class Tile : MonoBehaviour {
     public bool isFinal = false;
     public GameColor entranceTo;
     public GameColor color;
-    public List<Piece> players = new();
+    public List<Piece> pieces = new();
 }

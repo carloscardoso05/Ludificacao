@@ -13,7 +13,6 @@ public class PlayerIcon : MonoBehaviour
     private void Start()
     {
         GameManager.I.OnTurnChanged += ChangeIconColor;
-        currentIcon = GetIcon(GameManager.I.colorsManager.currentColor);
     }
 
     private void ChangeIconColor(object sender, GameColor newColor)

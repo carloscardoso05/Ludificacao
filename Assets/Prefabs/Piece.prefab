@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3788595069111557464}
   - component: {fileID: 3636111262128536205}
+  - component: {fileID: 5511927134652078034}
   - component: {fileID: 7444998481716784321}
   - component: {fileID: 3055107790696237559}
   - component: {fileID: 4278891452210528033}
@@ -48,11 +49,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48feaf81fdffaf64092626c91d747893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visual: {fileID: 5511927134652078034}
+  color: 0
+  inHome: 1
+--- !u!114 &5511927134652078034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3988960865634890721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b85aa7375d0ae46a5501f92c113989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  piece: {fileID: 3636111262128536205}
   spriteResolver: {fileID: 4278891452210528033}
   _renderer: {fileID: 7444998481716784321}
-  color: 0
   HomePosition: {x: 0, y: 0}
-  inHome: 1
 --- !u!212 &7444998481716784321
 SpriteRenderer:
   m_ObjectHideFlags: 0
