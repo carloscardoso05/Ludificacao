@@ -6,6 +6,7 @@ public class Piece : MonoBehaviour
 {
     [SerializeField] private PieceVisual visual;
     public GameColor color;
+    public Player player;
     public bool inHome = true;
     private int InitialIndex;
     public NavigationList<Tile> Path;
@@ -64,7 +65,7 @@ public class Piece : MonoBehaviour
 
     private static bool CanMove(Piece piece)
     {
-        return GameManager.I.colorsManager.currentColor == piece.color && GameManager.I.diceWasRolled && piece.Path.Next != piece.Path.Current;
+        return ColorsManager.I.currentColor == piece.color && Dice.I.wasRolled && piece.Path.Next != piece.Path.Current;
     }
 
     private void OnMouseUp()

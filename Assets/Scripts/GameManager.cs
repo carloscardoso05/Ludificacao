@@ -1,25 +1,21 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject piecePrefab;
+    [SerializeField] private GameObject playerPrefab;
     public static GameManager I;
-    public Dice dice;
-    public bool diceWasRolled = false;
     public GameState state = GameState.SelectPlayersNumber;
-    public ColorsManager colorsManager;
-    private Piece currentPiece;
     public event EventHandler<GameColor> OnTurnChanged;
     public event EventHandler<Piece> OnGameEnded;
-    public Dictionary<GameColor, int> playersPoints = new() {
-        {GameColor.Blue, 0},
-        {GameColor.Red, 0},
-        {GameColor.Green, 0},
-        {GameColor.Yellow, 0},
-    };
+
+    public class ExtraData
+    {
+        public Piece selectedPiece;
+        public Player player;
+    }
 
     #region Unity Life Cycle
 
@@ -46,67 +42,61 @@ public class GameManager : MonoBehaviour
     public void MovePiece(Piece piece)
     {
         var rnd = UnityEngine.Random.Range(0, 3);
-        currentPiece = piece;
-        QuizManager.I.SelectQuestion(rnd);
+        QuizManager.I.SelectQuestion(rnd, new ExtraData { selectedPiece = piece, player = piece.player });
     }
 
     private void HandleAnswer(object sender, AnswerData answerData)
     {
-        var currentColor = colorsManager.currentColor;
+        var currentColor = ColorsManager.I.currentColor;
         if (answerData.selectedAnswer.correct)
         {
-            currentPiece.MoveToNextTile(dice.value + Settings.I.GetDifficultyBonus(answerData.question.difficulty));
-            var pieceTile = currentPiece.Path.Current;
+            ExtraData extraData = (ExtraData)answerData.extraData;
+            Piece selectedPiece = extraData.selectedPiece;
+            Player player = extraData.player;
+
+            selectedPiece.MoveToNextTile(Dice.I.value + Settings.I.GetDifficultyBonus(answerData.question.difficulty));
+            var pieceTile = selectedPiece.Path.Current;
             var questionPoints = new int[] { 100, 200, 300 };
-            playersPoints[currentColor] += questionPoints[answerData.question.difficulty];
-            UiManager.I.UpdatePoints(currentColor, playersPoints[currentColor]);
-            if (pieceTile.isFinal && pieceTile.pieces.Count == 2)
-                OnGameEnded?.Invoke(this, currentPiece);
+
+            player.points += questionPoints[answerData.question.difficulty];
+            UiManager.I.UpdatePoints(currentColor, player.points);
+            if (pieceTile.isFinal && pieceTile.pieces.Count == 2) {
+                OnGameEnded?.Invoke(this, selectedPiece);
+            }
         }
-        colorsManager.UpdateColor();
+        ColorsManager.I.UpdateColor();
         OnTurnChanged?.Invoke(this, currentColor);
-        diceWasRolled = false;
+        Dice.I.wasRolled = false;
     }
 
     #endregion
 
     #region Misc
 
-    private void GeneratePlayersPieces()
+    private void GeneratePlayers()
     {
         var players = new GameObject("Players");
-        foreach (GameColor color in colorsManager.colors)
+        foreach (GameColor color in ColorsManager.I.colors)
         {
-            if (color == GameColor.White) continue;
-            var colorGO = new GameObject(color.ToString());
-            colorGO.transform.parent = players.transform;
-            for (int i = 0; i < 4; i++)
-            {
-                var piece = Instantiate(piecePrefab).GetComponent<Piece>();
-                var visual = piece.GetComponent<PieceVisual>();
-                piece.name = "Piece" + i.ToString();
-                piece.transform.parent = colorGO.transform;
-                Vector2 homePosition = Board.I.GetHome(color).transform.position;
-                Vector2 offset = Board.I.GetHomeOffset(i);
-                visual.HomePosition = homePosition + offset;
-                piece.color = color;
-                visual.spriteResolver.SetCategoryAndLabel("Body", color.ToString());
-            }
+            var playerGO = Instantiate(playerPrefab);
+            playerGO.transform.parent = players.transform;
+            playerGO.name = color.ToString() + "Player";
+            playerGO.GetComponent<Player>().color = color;
         }
     }
 
     public void InitGame(int playersQuantity)
     {
-        colorsManager = new ColorsManager(playersQuantity);
-        GeneratePlayersPieces();
+        ColorsManager.I = new ColorsManager(playersQuantity);
+        GeneratePlayers();
         SetMenuVisibility(false);
-        OnTurnChanged?.Invoke(this, colorsManager.currentColor);
+        OnTurnChanged?.Invoke(this, ColorsManager.I.currentColor);
     }
 
     private void SetMenuVisibility(bool isInMenu)
     {
         UiManager.I.SetActiveMainMenu(isInMenu);
-        dice.gameObject.SetActive(!isInMenu);
+        Dice.I.gameObject.SetActive(!isInMenu);
         Board.I.gameObject.SetActive(!isInMenu);
     }
 

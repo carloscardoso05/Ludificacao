@@ -18,17 +18,17 @@ public class QuizManagerTester : MonoBehaviour
         //Carregar questões fácil, média e difícil (W, E, R)
         if (Input.GetKeyDown(KeyCode.W))
         {
-            QuizManager.SelectQuestion(0);
+            QuizManager.SelectQuestion(0, null);
         }
         else
         if (Input.GetKeyDown(KeyCode.E))
         {
-            QuizManager.SelectQuestion(1);
+            QuizManager.SelectQuestion(1, null);
         }
         else
         if (Input.GetKeyDown(KeyCode.R))
         {
-            QuizManager.SelectQuestion(2);
+            QuizManager.SelectQuestion(2, null);
         }
     }
 }

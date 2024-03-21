@@ -12,7 +12,7 @@ class QuestionUI : MonoBehaviour
     private bool QuestionRuning = false;
     private float maxTime;
     private float elapsedTime;
-    private Question currentQuestion;
+    private QuizManager.QuestionData questionData;
     private readonly string[] difficultiesPtBr = { "Fácil", "Média", "Difícil" };
     private float[] timesForDifficulties;
     private readonly Color[] difficultiesBGColors = { Color.green, Color.yellow, Color.red };
@@ -34,18 +34,18 @@ class QuestionUI : MonoBehaviour
         if (QuestionRuning) UpdateTimer(Time.deltaTime);
     }
 
-    private void Render(Question question)
+    private void Render(QuizManager.QuestionData questionData)
     {
         timesForDifficulties = new float[] {
             Settings.I.GetDifficultyTimer(0),
             Settings.I.GetDifficultyTimer(1),
             Settings.I.GetDifficultyTimer(2),
         };
-        currentQuestion = question;
-        PrepareQuestion(question.question);
-        PrepareAnswers(question.answers);
-        PrepareDifficulty(question.difficulty);
-        PrepareTimer(question.difficulty);
+        this.questionData = questionData;
+        PrepareQuestion(this.questionData.question.question);
+        PrepareAnswers(this.questionData.question.answers);
+        PrepareDifficulty(this.questionData.question.difficulty);
+        PrepareTimer(this.questionData.question.difficulty);
         Show();
     }
 
@@ -65,7 +65,11 @@ class QuestionUI : MonoBehaviour
             answerElement.GetComponent<Button>().onClick.RemoveAllListeners();
             answerElement.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    OnAnswerSelected?.Invoke(this, new AnswerData(currentQuestion, answer, elapsedTime));
+                    OnAnswerSelected?.Invoke(this, new AnswerData(
+                        questionData.question,
+                        answer,
+                        elapsedTime,
+                        questionData.extraData));
                     Hide();
                 }
             );
@@ -101,7 +105,11 @@ class QuestionUI : MonoBehaviour
         if (elapsedTime > maxTime)
         {
             Debug.Log("Tempo excedido");
-            OnAnswerSelected?.Invoke(this, new AnswerData(currentQuestion, null, maxTime));
+            OnAnswerSelected?.Invoke(this, new AnswerData(
+                questionData.question,
+                null,
+                maxTime,
+                questionData.extraData));
             Hide();
         }
     }

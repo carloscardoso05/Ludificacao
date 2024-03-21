@@ -9,11 +9,17 @@ class QuizManager : MonoBehaviour
     private Quiz Quiz;
     private bool answering = false;
     public bool selectingQuiz = false;
-    public event EventHandler<Question> OnChoseQuestion;
+    public event EventHandler<QuestionData> OnChoseQuestion;
     private List<string>[] availableQuestions = new List<string>[3];
     public static QuizManager I;
     public event EventHandler<AnswerData> OnAnswered;
     public event EventHandler<Quiz> OnSelectedQuiz;
+
+    public class QuestionData : EventArgs
+    {
+        public Question question;
+        public object extraData;
+    }
 
     private void Awake()
     {
@@ -55,7 +61,7 @@ class QuizManager : MonoBehaviour
         selectingQuiz = true;
     }
 
-    public void SelectQuestion(int difficulty)
+    public void SelectQuestion(int difficulty, object extraData)
     {
         if (selectingQuiz) throw new Exception("Não pode responder uma questão enquanto seleciona um quiz");
         if (Quiz is null) throw new Exception("Nenhum Quiz foi selecionado ainda");
@@ -70,7 +76,12 @@ class QuizManager : MonoBehaviour
         Question question = Quiz.questions[questionId];
         difficultyQuestions.RemoveAt(index);
 
-        OnChoseQuestion?.Invoke(this, question);
+        QuestionData questionData = new()
+        {
+            question = question,
+            extraData = extraData,
+        };
+        OnChoseQuestion?.Invoke(this, questionData);
         answering = true;
     }
 

@@ -18,7 +18,7 @@ public class PlayerIcon : MonoBehaviour
     private void ChangeIconColor(object sender, GameColor newColor)
     {
         var icons = new GameObject[] { BlueIcon, RedIcon, GreenIcon, YellowIcon };
-        currentIcon = GetIcon(GameManager.I.colorsManager.currentColor);
+        currentIcon = GetIcon(ColorsManager.I.currentColor);
         foreach (GameObject icon in icons)
         {
             icon.transform.localScale = Vector3.one;

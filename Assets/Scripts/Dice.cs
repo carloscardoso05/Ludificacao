@@ -9,8 +9,15 @@ using UnityEngine.U2D.Animation;
 public class Dice : MonoBehaviour
 {
     private SpriteResolver spriteResolver;
-    [HideInInspector] public int value = 1;
-    [HideInInspector] public bool diceIsRolling = false;
+    public bool wasRolled = false;
+    public int value = 1;
+    public bool isRolling = false;
+    public static Dice I;
+    
+    private void Awake()
+    {
+        I = this;
+    }
 
     private void Start()
     {
@@ -18,13 +25,13 @@ public class Dice : MonoBehaviour
     }
     public void RollDice()
     {
-        if (!diceIsRolling && !GameManager.I.diceWasRolled)
+        if (!isRolling && !wasRolled)
             StartCoroutine(RollDiceCore());
     }
 
     private IEnumerator RollDiceCore()
     {
-        diceIsRolling = true;
+        isRolling = true;
         var prev = value;
         for (int i = 0; i < 5; i++)
         {
@@ -33,11 +40,11 @@ public class Dice : MonoBehaviour
             spriteResolver.SetCategoryAndLabel("Dice", value.ToString());
             yield return new WaitForSeconds(0.1f);
         }
-        diceIsRolling = false;
-        GameManager.I.diceWasRolled = true;
+        isRolling = false;
+        wasRolled = true;
     }
 
-    private void OnMouseDown()
+    private void OnMouseUp()
     {
         RollDice();
     }
