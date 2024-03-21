@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Piece))]
 public class PieceVisual : MonoBehaviour
@@ -69,13 +70,14 @@ public class PieceVisual : MonoBehaviour
 
     private List<Vector3> GetOffsetedPositions(Tile tile)
     {
-        var sizeX = 1;
+        float spacing = 1.5f;
+        float sizeX = spacing * 1 / 3;
         var position = tile.gameObject.transform.position;
         var start = position.x - sizeX / 2;
         List<Vector3> offsetedPositions = new();
-        for (int i = 1; i < tile.pieces.Count + 1; i++)
+        for (float i = 1; i < tile.pieces.Count + 1; i++)
         {
-            var x = start + sizeX * i / (tile.pieces.Count + 1);
+            float x = start + sizeX * i / (tile.pieces.Count + 1);
             Vector3 pos = new(x, tile.transform.position.y, tile.transform.position.z);
             offsetedPositions.Add(pos);
         }
@@ -88,7 +90,12 @@ public class PieceVisual : MonoBehaviour
         var positions = GetOffsetedPositions(piece.Path.Current);
         for (int i = 0; i < positions.Count; i++)
         {
-            piece.Path.Current.pieces[i].transform.position = positions[i];
+            var currPiece = piece.Path.Current.pieces[i];
+            currPiece.transform.position = positions[i];
+            // float baseScale = 1.2f;
+            // float scalingFactor = 0.2f;
+            // float scale = baseScale / (positions.Count / scalingFactor);
+            // currPiece.transform.localScale = new(scale, scale, scale);
         }
     }
 }
