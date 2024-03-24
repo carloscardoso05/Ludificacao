@@ -13,6 +13,7 @@ public class Piece : MonoBehaviour
     public event EventHandler<PieceMovedArgs> PieceMoved;
     public class PieceMovedArgs : EventArgs
     {
+        public Piece piece;
         public bool wasInHome;
         public Tile prevTile;
         public Tile currTile;
@@ -43,6 +44,7 @@ public class Piece : MonoBehaviour
         Path.Current.pieces.Add(this);
         PieceMovedArgs args = new()
         {
+            piece = this,
             currTile = Path.Current,
             prevTile = prevTile,
             tilesMoved = times,

@@ -11,14 +11,18 @@ public class Player : MonoBehaviour
     private void Start()
     {
         InstantiatePieces();
-        QuizManager.Instance.OnAnswered += UpdatePontuation;
+        QuizManager.Instance.OnAnswered += AddPoints;
     }
 
 
-    private void UpdatePontuation(object sender, AnswerData answerData)
+    private void AddPoints(object sender, AnswerData answerData)
     {
-        var questionPoints = new int[] { 100, 200, 300 };
-        points += questionPoints[answerData.question.difficulty];
+        if (((GameManager.ExtraData)answerData.extraData).player.name == name)
+        {
+            var questionPoints = new int[] { 100, 200, 300 };
+            points += questionPoints[answerData.question.difficulty];
+            UiManager.I.UpdatePoints(this);
+        }
     }
 
     private void InstantiatePieces()
@@ -27,7 +31,7 @@ public class Player : MonoBehaviour
         {
             var piece = Instantiate(piecePrefab).GetComponent<Piece>();
             var visual = piece.GetComponent<PieceVisual>();
-            piece.name = color.ToString() +  "Piece" + i.ToString();
+            piece.name = color.ToString() + "Piece" + i.ToString();
             piece.transform.parent = transform;
             Vector2 homePosition = GameManager.Instance.board.GetHome(color).transform.position;
             Vector2 offset = GameManager.Instance.board.GetHomeOffset(i);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Piece;
@@ -8,10 +9,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     public GameState state;
     public event EventHandler<GameColor> OnTurnChanged;
-    public event EventHandler<Piece> OnGameEnded;
+    public event EventHandler<UiManager.EndGameArgs> OnGameEnded;
     public Dice dice;
     public Board board;
     public static GameManager Instance;
+    private Player[] players;
 
     #region Tester Tools
 
@@ -55,7 +57,11 @@ public class GameManager : MonoBehaviour
     {
         if (args.currTile.isFinal && args.currTile.pieces.Count == 2)
         {
-            OnGameEnded?.Invoke(this, args.currTile.pieces.First());
+            OnGameEnded?.Invoke(this, new()
+            {
+                players = players,
+                winner = args.piece.player,
+            });
         }
     }
 
@@ -75,15 +81,18 @@ public class GameManager : MonoBehaviour
 
     private void GeneratePlayers(GameColor[] colors)
     {
-        var players = new GameObject("Players");
+        List<Player> playersList = new();
+        var playersGO = new GameObject("Players");
         foreach (GameColor color in colors)
         {
             var playerGO = Instantiate(playerPrefab);
-            playerGO.transform.parent = players.transform;
+            playerGO.transform.parent = playersGO.transform;
             playerGO.name = color.ToString() + "Player";
             var player = playerGO.GetComponent<Player>();
             player.color = color;
+            playersList.Add(player);
         }
+        players = playersList.ToArray();
     }
 
     public void InitGame(int playersQuantity)

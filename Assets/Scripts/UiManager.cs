@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using static GameManager;
 
 public class UiManager : MonoBehaviour
 {
@@ -15,6 +15,11 @@ public class UiManager : MonoBehaviour
     private TextMeshPro RedPoints;
     private TextMeshPro GreenPoints;
     private TextMeshPro YellowPoints;
+    public class EndGameArgs
+    {
+        public Player winner;
+        public Player[] players;
+    }
 
     private void Awake()
     {
@@ -23,8 +28,6 @@ public class UiManager : MonoBehaviour
 
     void Start()
     {
-        QuizManager.Instance.OnAnswered += UpdatePoints;
-
         GameManager.Instance.OnGameEnded += EndGame;
         BluePoints = playersInfo.transform.Find("BlueInfo").GetComponentInChildren<TextMeshPro>();
         RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshPro>();
@@ -32,7 +35,7 @@ public class UiManager : MonoBehaviour
         YellowPoints = playersInfo.transform.Find("YellowInfo").GetComponentInChildren<TextMeshPro>();
     }
 
-    private void EndGame(object sender, Piece winner)
+    private void EndGame(object sender, EndGameArgs args)
     {
         Dictionary<GameColor, string> colorsPtBr = new() {
             {GameColor.Blue, "Azul"},
@@ -40,8 +43,18 @@ public class UiManager : MonoBehaviour
             {GameColor.Green, "Verde"},
             {GameColor.Yellow, "Amarelo"},
         };
-        EndGameScreen.transform.Find("Nome").GetComponent<TextMeshProUGUI>().text = $"Jogador {colorsPtBr[winner.color]} ganhou !";
-        ShowEndGame(winner.color);
+
+        EndGameScreen.transform.Find("Nome").GetComponent<TextMeshProUGUI>().text = $"Jogador {colorsPtBr[args.winner.color]} ganhou !";
+        
+        var sortedPlayers = args.players.ToList().OrderByDescending((p) => p.points).ToArray();
+        for (int i = 0; i < sortedPlayers.Length; i++)
+        {
+            var player = sortedPlayers[i];
+            var rankingText = EndGameScreen.transform.Find("Ranking").Find($"{i + 1}Lugar").GetComponent<TextMeshProUGUI>();
+            rankingText.text = $"{i + 1}º Lugar - {colorsPtBr[player.color]} - {player.points} pts";
+        }
+
+        ShowEndGame(args.winner.color);
     }
 
     public void ShowSettings()
@@ -63,10 +76,8 @@ public class UiManager : MonoBehaviour
     public void ShowEndGame(GameColor winnerColor) => EndGameScreen.ShowEndGameScreen(winnerColor);
     public void HideEndGame() => EndGameScreen.gameObject.SetActive(false);
 
-    private void UpdatePoints(object sender, AnswerData answerData)
+    public void UpdatePoints(Player player)
     {
-        var extraData = (ExtraData)answerData.extraData;
-        var player = extraData.player;
         var points = player.points;
         switch (player.color)
         {
