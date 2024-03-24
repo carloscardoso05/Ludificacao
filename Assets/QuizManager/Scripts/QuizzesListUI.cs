@@ -13,10 +13,10 @@ class QuizzesListUI : MonoBehaviour
     private TextField TextField { get => Root.Q<TextField>("SearchQuiz"); }
     private List<Quiz> Quizzes = new();
     public event EventHandler<Quiz> OnQuizSelected;
-    public static QuizzesListUI I;
+    public static QuizzesListUI Instance;
 
     private void Awake() {
-        I = this;
+        Instance = this;
     }
 
     private void Start()

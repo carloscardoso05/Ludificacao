@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class Question
+public class Question
 {
     public string id = "";
     public string question = "";

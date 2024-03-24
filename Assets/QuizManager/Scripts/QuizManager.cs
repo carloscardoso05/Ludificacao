@@ -11,24 +11,18 @@ class QuizManager : MonoBehaviour
     public bool selectingQuiz = false;
     public event EventHandler<QuestionData> OnChoseQuestion;
     private List<string>[] availableQuestions = new List<string>[3];
-    public static QuizManager I;
     public event EventHandler<AnswerData> OnAnswered;
     public event EventHandler<Quiz> OnSelectedQuiz;
-
-    public class QuestionData : EventArgs
-    {
-        public Question question;
-        public object extraData;
-    }
+    public static QuizManager Instance;
 
     private void Awake()
     {
-        I = this;
+        Instance = this;
     }
 
     private void Start()
     {
-        QuizzesListUI.I.OnQuizSelected += (sender, quiz) =>
+        QuizzesListUI.Instance.OnQuizSelected += (sender, quiz) =>
         {
             Quiz = quiz;
             for (int i = 0; i < 3; i++)
@@ -36,8 +30,8 @@ class QuizManager : MonoBehaviour
                 availableQuestions[i] = Quiz.questions.Keys.Where((id) => Quiz.questions[id].difficulty == i).ToList();
             }
         };
-        QuizzesListUI.I.OnQuizSelected += HandleSelectedQuiz;
-        QuestionUI.I.OnAnswerSelected += PropagateAnswer;
+        QuizzesListUI.Instance.OnQuizSelected += HandleSelectedQuiz;
+        QuestionUI.Instance.OnAnswerSelected += PropagateAnswer;
     }
 
     private void PropagateAnswer(object sender, AnswerData answerData)
@@ -56,12 +50,12 @@ class QuizManager : MonoBehaviour
         {
             throw new Exception("Não pode selecionar um quiz enquanto responde a uma questão");
         }
-        QuizzesListUI.I.Show();
-        QuizzesListUI.I.ListView.itemsChosen += (_) => selectingQuiz = false;
+        QuizzesListUI.Instance.Show();
+        QuizzesListUI.Instance.ListView.itemsChosen += (_) => selectingQuiz = false;
         selectingQuiz = true;
     }
 
-    public void SelectQuestion(int difficulty, object extraData)
+    public void ShowQuestion(int difficulty, object extraData)
     {
         if (selectingQuiz) throw new Exception("Não pode responder uma questão enquanto seleciona um quiz");
         if (Quiz is null) throw new Exception("Nenhum Quiz foi selecionado ainda");
@@ -84,5 +78,4 @@ class QuizManager : MonoBehaviour
         OnChoseQuestion?.Invoke(this, questionData);
         answering = true;
     }
-
 }

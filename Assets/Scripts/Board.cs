@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    public static Board I;
     private readonly Dictionary<GameColor, GameObject> paths = new();
     private readonly Dictionary<GameColor, GameObject> homes = new();
     private readonly Dictionary<GameColor, int> initialIndexes = new(){
@@ -18,7 +17,6 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
-        I = this;
         foreach (GameColor color in Enum.GetValues(typeof(GameColor)))
         {
             GameObject path = GameObject.Find(color.ToString() + "Path");

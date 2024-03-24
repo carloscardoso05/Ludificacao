@@ -4,15 +4,16 @@ using UnityEngine;
 [RequireComponent(typeof(PieceVisual))]
 public class Piece : MonoBehaviour
 {
-    [SerializeField] private PieceVisual visual;
+    public PieceVisual visual;
     public GameColor color;
     public Player player;
     public bool inHome = true;
     private int InitialIndex;
     public NavigationList<Tile> Path;
-    public event EventHandler<OnPieceChangedTileEventArgs> OnPieceChangedTileEvent;
-    public class OnPieceChangedTileEventArgs : EventArgs
+    public event EventHandler<PieceMovedArgs> PieceMoved;
+    public class PieceMovedArgs : EventArgs
     {
+        public bool wasInHome;
         public Tile prevTile;
         public Tile currTile;
         public int tilesMoved;
@@ -20,29 +21,35 @@ public class Piece : MonoBehaviour
 
     private void Start()
     {
-        visual.OnAnimationEnded += SendOthersToHome;
-        InitialIndex = Board.I.GetInitialIndex(color);
-        var whiteTiles = Board.I.GetTiles(GameColor.White);
-        var colorTiles = Board.I.GetTiles(color);
+        PieceMoved += SendOthersToHome;
+        QuizManager.Instance.OnAnswered += MovePiece;
+        InitialIndex = GameManager.Instance.board.GetInitialIndex(color);
+        var whiteTiles = GameManager.Instance.board.GetTiles(GameColor.White);
+        var colorTiles = GameManager.Instance.board.GetTiles(color);
         Path = Board.GetPath(whiteTiles, colorTiles, InitialIndex);
         MoveToHome();
     }
 
-    public void MoveToNextTile(int times)
+    private void MovePiece(object sender, AnswerData answerData)
     {
+        var isNotThisPiece = ((GameManager.ExtraData)answerData.extraData).selectedPiece.name != name;
+        var isNotCorrectAnswer = !answerData.selectedAnswer.correct;
+        if (isNotThisPiece) return;
+        if (isNotCorrectAnswer && !GameManager.Instance.alwaysAnswerRight) return;
+        var times = ((GameManager.ExtraData)answerData.extraData).diceValue;
         var prevTile = Path.Current;
         Path.Current.pieces.Remove(this);
-        Path.CurrentIndex += times;
-        if (inHome) Path.CurrentIndex -= 1;
+        Path.CurrentIndex += inHome ? times - 1 : times;
         Path.Current.pieces.Add(this);
-        inHome = false;
-        OnPieceChangedTileEventArgs args = new()
+        PieceMovedArgs args = new()
         {
             currTile = Path.Current,
             prevTile = prevTile,
             tilesMoved = times,
+            wasInHome = inHome
         };
-        OnPieceChangedTileEvent?.Invoke(this, args);
+        inHome = false;
+        visual.StartAnimation(args);
     }
 
     private void SendOthersToHome(object sender, EventArgs args)
@@ -58,6 +65,7 @@ public class Piece : MonoBehaviour
 
     public void MoveToHome()
     {
+        Path.Current.pieces.Remove(this);
         inHome = true;
         Path.CurrentIndex = 0;
         visual.SendHome();
@@ -65,25 +73,24 @@ public class Piece : MonoBehaviour
 
     private static bool CanMove(Piece piece)
     {
-        return ColorsManager.I.currentColor == piece.color && Dice.I.wasRolled && piece.Path.Next != piece.Path.Current;
+        var isThisPlayerTurn = ColorsManager.I.currentColor == piece.color;
+        var isSelectingPiece = GameManager.Instance.state == GameState.SelectingPiece;
+        var isNotFinalTile = !piece.Path.Current.isFinal;
+        return isThisPlayerTurn && isSelectingPiece && isNotFinalTile;
     }
 
     private void OnMouseUp()
     {
-        if (inHome && CanMove(this))
+        if (CanMove(this))
         {
-            GameManager.I.MovePiece(this);
-            return;
-        }
+            var rnd = UnityEngine.Random.Range(0, 3);
+            QuizManager.Instance.ShowQuestion(rnd, new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value });
 
-        // Tenta aplicar a ação de mover a cada peça na casa, assim não há problemas com sobreposição
-        foreach (Piece piece in Path.Current.pieces)
-        {
-            if (CanMove(piece))
-            {
-                GameManager.I.MovePiece(piece);
-                break;
-            }
         }
+    }
+
+    public void OnPieceMoved(PieceMovedArgs args)
+    {
+        PieceMoved?.Invoke(this, args);
     }
 }

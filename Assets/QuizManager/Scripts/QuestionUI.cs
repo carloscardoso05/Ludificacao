@@ -12,21 +12,20 @@ class QuestionUI : MonoBehaviour
     private bool QuestionRuning = false;
     private float maxTime;
     private float elapsedTime;
-    private QuizManager.QuestionData questionData;
+    private QuestionData questionData;
     private readonly string[] difficultiesPtBr = { "Fácil", "Média", "Difícil" };
     private float[] timesForDifficulties;
     private readonly Color[] difficultiesBGColors = { Color.green, Color.yellow, Color.red };
-    public static QuestionUI I;
+    public static QuestionUI Instance;
 
-    private void Awake()
-    {
-        I = this;
+    private void Awake() {
+        Instance = this;
     }
 
     private void Start()
     {
         Hide();
-        QuizManager.I.OnChoseQuestion += (sender, question) => Render(question);
+        QuizManager.Instance.OnChoseQuestion += (sender, question) => Render(question);
     }
 
     private void Update()
@@ -34,7 +33,7 @@ class QuestionUI : MonoBehaviour
         if (QuestionRuning) UpdateTimer(Time.deltaTime);
     }
 
-    private void Render(QuizManager.QuestionData questionData)
+    private void Render(QuestionData questionData)
     {
         timesForDifficulties = new float[] {
             Settings.I.GetDifficultyTimer(0),
@@ -69,7 +68,8 @@ class QuestionUI : MonoBehaviour
                         questionData.question,
                         answer,
                         elapsedTime,
-                        questionData.extraData));
+                        questionData.extraData
+                        ));
                     Hide();
                 }
             );

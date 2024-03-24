@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static GameManager;
 
 public class UiManager : MonoBehaviour
 {
@@ -22,7 +23,9 @@ public class UiManager : MonoBehaviour
 
     void Start()
     {
-        GameManager.I.OnGameEnded += EndGame;
+        QuizManager.Instance.OnAnswered += UpdatePoints;
+
+        GameManager.Instance.OnGameEnded += EndGame;
         BluePoints = playersInfo.transform.Find("BlueInfo").GetComponentInChildren<TextMeshPro>();
         RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshPro>();
         GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshPro>();
@@ -60,9 +63,12 @@ public class UiManager : MonoBehaviour
     public void ShowEndGame(GameColor winnerColor) => EndGameScreen.ShowEndGameScreen(winnerColor);
     public void HideEndGame() => EndGameScreen.gameObject.SetActive(false);
 
-    public void UpdatePoints(GameColor currentColor, int points)
+    private void UpdatePoints(object sender, AnswerData answerData)
     {
-        switch (currentColor)
+        var extraData = (ExtraData)answerData.extraData;
+        var player = extraData.player;
+        var points = player.points;
+        switch (player.color)
         {
             case GameColor.Blue:
                 BluePoints.text = points.ToString(); break;

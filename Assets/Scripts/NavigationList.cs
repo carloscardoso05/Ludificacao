@@ -1,28 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 
 public class NavigationList<T> : List<T>
 {
     private int _currentIndex = 0;
     public int CurrentIndex
     {
-        get
-        {
-            if (_currentIndex > Count - 1) { _currentIndex = Count - 1; }
-            if (_currentIndex < 0) { _currentIndex = 0; }
-            return _currentIndex;
-        }
-        set { _currentIndex = value; }
+        get => _currentIndex;
+        set { _currentIndex = math.clamp(value, 0, Count - 1); }
     }
 
     public T Next
     {
-        get => ElementAtOrDefault(_currentIndex+1, this.Last());
+        get => ElementAtOrDefault(_currentIndex + 1, this.Last());
     }
 
     public T Previous
     {
-        get => ElementAtOrDefault(_currentIndex-1, this.First());
+        get => ElementAtOrDefault(_currentIndex - 1, this.First());
     }
 
     public T Current

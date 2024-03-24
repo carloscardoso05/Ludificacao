@@ -9,39 +9,46 @@ using UnityEngine.U2D.Animation;
 public class Dice : MonoBehaviour
 {
     private SpriteResolver spriteResolver;
-    public bool wasRolled = false;
-    public int value = 1;
-    public bool isRolling = false;
-    public static Dice I;
-    
-    private void Awake()
+    [SerializeField] private int _value = 6;
+    public int Value
     {
-        I = this;
+        get => _value;
+        set
+        {
+            _value = value;
+            spriteResolver.SetCategoryAndLabel("Dice", value.ToString());
+        }
     }
+    private bool isAnimating = false;
 
     private void Start()
     {
         spriteResolver = GetComponent<SpriteResolver>();
+        Value = 6;
     }
+
     public void RollDice()
     {
-        if (!isRolling && !wasRolled)
+        var gameState = GameManager.Instance.state;
+        if (gameState == GameState.RollingDice && !isAnimating)
+        {
             StartCoroutine(RollDiceCore());
+        }
     }
 
     private IEnumerator RollDiceCore()
     {
-        isRolling = true;
-        var prev = value;
+        isAnimating = true;
+        var prev = Value;
         for (int i = 0; i < 5; i++)
         {
-            while (value == prev) value = Random.Range(1, 7);
-            prev = value;
-            spriteResolver.SetCategoryAndLabel("Dice", value.ToString());
+            while (Value == prev) Value = Random.Range(1, 7);
+            spriteResolver.SetCategoryAndLabel("Dice", Value.ToString());
+            prev = Value;
             yield return new WaitForSeconds(0.1f);
         }
-        isRolling = false;
-        wasRolled = true;
+        isAnimating = false;
+        GameManager.Instance.ChangeState(GameState.SelectingPiece);
     }
 
     private void OnMouseUp()

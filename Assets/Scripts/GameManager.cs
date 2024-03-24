@@ -1,18 +1,28 @@
 using System;
+using System.Linq;
 using UnityEngine;
-
-public enum GameState { SelectPlayersNumber, RollingDice, SelectPiece, End };
+using static Piece;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject piecePrefab;
     [SerializeField] private GameObject playerPrefab;
-    public static GameManager I;
-    public GameState state = GameState.SelectPlayersNumber;
+    public GameState state;
     public event EventHandler<GameColor> OnTurnChanged;
     public event EventHandler<Piece> OnGameEnded;
+    public Dice dice;
+    public Board board;
+    public static GameManager Instance;
+
+    #region Tester Tools
+
+    public bool alwaysAnswerRight = false;
+    public bool directMove = false;
+
+    #endregion
 
     public class ExtraData
     {
+        public int diceValue;
         public Piece selectedPiece;
         public Player player;
     }
@@ -21,83 +31,80 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        I = this;
+        Instance = this;
     }
 
     private void Start()
     {
         SetMenuVisibility(false);
-        QuizManager.I.OnAnswered += HandleAnswer;
-        QuizManager.I.OnSelectedQuiz += (sender, quiz) =>
+        ChangeState(GameState.SelectingQuiz);
+        QuizManager.Instance.OnAnswered += ChangeTurn;
+        QuizManager.Instance.OnSelectedQuiz += (sender, quiz) =>
         {
             SetMenuVisibility(true);
+            ChangeState(GameState.SelectingPlayersQnt);
         };
-        QuizManager.I.SelectQuiz();
+        QuizManager.Instance.SelectQuiz();
     }
 
     #endregion
 
     #region Game Mechanics
 
-    public void MovePiece(Piece piece)
+    public void CheckPlayerWin(object sender, PieceMovedArgs args)
     {
-        var rnd = UnityEngine.Random.Range(0, 3);
-        QuizManager.I.SelectQuestion(rnd, new ExtraData { selectedPiece = piece, player = piece.player });
+        if (args.currTile.isFinal && args.currTile.pieces.Count == 2)
+        {
+            OnGameEnded?.Invoke(this, args.currTile.pieces.First());
+        }
     }
 
-    private void HandleAnswer(object sender, AnswerData answerData)
+    private void ChangeTurn(object sender, AnswerData answerData)
     {
-        var currentColor = ColorsManager.I.currentColor;
-        if (answerData.selectedAnswer.correct)
+        if (dice.Value != 6 || !answerData.selectedAnswer.correct)
         {
-            ExtraData extraData = (ExtraData)answerData.extraData;
-            Piece selectedPiece = extraData.selectedPiece;
-            Player player = extraData.player;
-
-            selectedPiece.MoveToNextTile(Dice.I.value + Settings.I.GetDifficultyBonus(answerData.question.difficulty));
-            var pieceTile = selectedPiece.Path.Current;
-            var questionPoints = new int[] { 100, 200, 300 };
-
-            player.points += questionPoints[answerData.question.difficulty];
-            UiManager.I.UpdatePoints(currentColor, player.points);
-            if (pieceTile.isFinal && pieceTile.pieces.Count == 2) {
-                OnGameEnded?.Invoke(this, selectedPiece);
-            }
+            ColorsManager.I.UpdateColor();
         }
-        ColorsManager.I.UpdateColor();
-        OnTurnChanged?.Invoke(this, currentColor);
-        Dice.I.wasRolled = false;
+        ChangeState(GameState.RollingDice);
+        OnTurnChanged?.Invoke(this, ColorsManager.I.currentColor);
     }
 
     #endregion
 
     #region Misc
 
-    private void GeneratePlayers()
+    private void GeneratePlayers(GameColor[] colors)
     {
         var players = new GameObject("Players");
-        foreach (GameColor color in ColorsManager.I.colors)
+        foreach (GameColor color in colors)
         {
             var playerGO = Instantiate(playerPrefab);
             playerGO.transform.parent = players.transform;
             playerGO.name = color.ToString() + "Player";
-            playerGO.GetComponent<Player>().color = color;
+            var player = playerGO.GetComponent<Player>();
+            player.color = color;
         }
     }
 
     public void InitGame(int playersQuantity)
     {
         ColorsManager.I = new ColorsManager(playersQuantity);
-        GeneratePlayers();
+        GeneratePlayers(ColorsManager.I.colors);
         SetMenuVisibility(false);
+        ChangeState(GameState.RollingDice);
         OnTurnChanged?.Invoke(this, ColorsManager.I.currentColor);
     }
 
     private void SetMenuVisibility(bool isInMenu)
     {
         UiManager.I.SetActiveMainMenu(isInMenu);
-        Dice.I.gameObject.SetActive(!isInMenu);
-        Board.I.gameObject.SetActive(!isInMenu);
+        dice.gameObject.SetActive(!isInMenu);
+        board.gameObject.SetActive(!isInMenu);
+    }
+
+    public void ChangeState(GameState newState)
+    {
+        state = newState;
     }
 
     #endregion

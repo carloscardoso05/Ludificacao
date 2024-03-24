@@ -9,10 +9,6 @@ public class ColorsManager
     public GameColor currentColor;
     public static ColorsManager I;
 
-    private void Awake() {
-        I = this;
-    }
-
     public ColorsManager(int playersQuantity)
     {
         colors = GetColorsByPlayersQty(playersQuantity);

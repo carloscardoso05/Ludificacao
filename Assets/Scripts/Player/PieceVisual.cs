@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
-using UnityEngine.UIElements;
+using static Piece;
 
 [RequireComponent(typeof(Piece))]
 public class PieceVisual : MonoBehaviour
@@ -11,15 +11,15 @@ public class PieceVisual : MonoBehaviour
     public SpriteResolver spriteResolver;
     public SpriteRenderer _renderer;
     public Vector2 HomePosition;
-    private Vector2 tilePosition;
-    private Vector2 cursorPosition;
-    public event EventHandler OnAnimationEnded;
-    private bool animationEnded = false;
+    [SerializeField] private Vector2 tilePosition;
+    [SerializeField] private Vector2 cursorPosition;
+    [SerializeField] private bool animationEnded = false;
+    [SerializeField] private PieceMovedArgs pieceChangedTileArgs;
 
     private void Start()
     {
-        piece.OnPieceChangedTileEvent += UpdateTileAndCursorPosition;
-        OnAnimationEnded += Reorganize;
+        piece.PieceMoved += Reorganize;
+        piece.PieceMoved += GameManager.Instance.CheckPlayerWin;
     }
 
     private void Update()
@@ -37,7 +37,10 @@ public class PieceVisual : MonoBehaviour
                 else
                 {
                     animationEnded = true;
-                    OnAnimationEnded?.Invoke(this, EventArgs.Empty);
+                    if (!piece.inHome)
+                    {
+                        piece.OnPieceMoved(pieceChangedTileArgs);
+                    }
                 }
             }
         }
@@ -60,12 +63,13 @@ public class PieceVisual : MonoBehaviour
         animationEnded = false;
     }
 
-    public void UpdateTileAndCursorPosition(object sender, Piece.OnPieceChangedTileEventArgs args)
+    public void StartAnimation(PieceMovedArgs args)
     {
         tilePosition = args.currTile.transform.position;
-        piece.Path.CurrentIndex = piece.Path.CurrentIndex - args.tilesMoved + 1;
+        piece.Path.CurrentIndex -= args.tilesMoved - 1;
         cursorPosition = piece.Path.Current.transform.position;
         animationEnded = false;
+        pieceChangedTileArgs = args;
     }
 
     private List<Vector3> GetOffsetedPositions(Tile tile)
@@ -92,10 +96,6 @@ public class PieceVisual : MonoBehaviour
         {
             var currPiece = piece.Path.Current.pieces[i];
             currPiece.transform.position = positions[i];
-            // float baseScale = 1.2f;
-            // float scalingFactor = 0.2f;
-            // float scale = baseScale / (positions.Count / scalingFactor);
-            // currPiece.transform.localScale = new(scale, scale, scale);
         }
     }
 }

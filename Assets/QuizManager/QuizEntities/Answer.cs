@@ -1,4 +1,4 @@
-class Answer
+public class Answer
 {
     public string id = "";
     public string text = "";
