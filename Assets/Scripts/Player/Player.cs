@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
     private void AddPoints(object sender, AnswerData answerData)
     {
-        if (((GameManager.ExtraData)answerData.extraData).player.name == name)
+        if (((GameManager.ExtraData)answerData.extraData).player.name == name && answerData.selectedAnswer.correct)
         {
             var questionPoints = new int[] { 100, 200, 300 };
             points += questionPoints[answerData.question.difficulty];
