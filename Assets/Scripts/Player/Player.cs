@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        InstantiatePieces();
         QuizManager.Instance.OnAnswered += AddPoints;
+        InstantiatePieces();
     }
 
 
@@ -27,8 +27,12 @@ public class Player : MonoBehaviour
 
     private void InstantiatePieces()
     {
+        var initialIndex = GameManager.Instance.board.GetInitialIndex(color);
+        var whiteTiles = GameManager.Instance.board.GetTiles(GameColor.White);
+        var colorTiles = GameManager.Instance.board.GetTiles(color);
         for (int i = 0; i < 4; i++)
         {
+            var path = Board.GetPath(whiteTiles, colorTiles, initialIndex);
             var piece = Instantiate(piecePrefab).GetComponent<Piece>();
             var visual = piece.GetComponent<PieceVisual>();
             piece.name = color.ToString() + "Piece" + i.ToString();
@@ -38,7 +42,9 @@ public class Player : MonoBehaviour
             visual.HomePosition = homePosition + offset;
             piece.color = color;
             piece.player = this;
+            piece.Path = path;
             visual.spriteResolver.SetCategoryAndLabel("Body", color.ToString());
+            pieces.Add(piece);
         }
     }
 }

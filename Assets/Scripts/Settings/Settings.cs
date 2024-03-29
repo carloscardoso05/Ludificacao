@@ -3,16 +3,23 @@ using UnityEngine;
 
 public class Settings : MonoBehaviour
 {
+    [SerializeField] private string _gameVersion = "0.0.0";
+    public string GameVersion { get => _gameVersion; }
+    [SerializeField] private string _nickName = "0.0.0";
+    public string NickName { get => _nickName; }
     private DifficultyBonus difficultyBonus;
     private DifficultyTimer difficultyTimer;
     public static Settings I;
+
+
 
     private void Awake()
     {
         I = this;
     }
 
-    private void Start() {
+    private void Start()
+    {
         difficultyBonus = DifficultyBonus.I;
         difficultyTimer = DifficultyTimer.I;
     }

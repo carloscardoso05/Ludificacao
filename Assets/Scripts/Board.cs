@@ -33,26 +33,18 @@ public class Board : MonoBehaviour
     private void InitializeTiles(GameObject path, GameColor color)
     {
         int i = 0;
+        int[] safeIndexes = new int[] { 0, 8, 13, 21, 26, 34, 39, 47 };
         foreach (Transform childTransform in path.transform)
         {
             var tile = childTransform.gameObject.AddComponent<Tile>();
             tile.color = color;
             tile.isSafe = false;
             tile.name = color.ToString() + "Tile" + i.ToString();
-            i++;
-        }
-        if (color == GameColor.White)
-        {
-            i = 0;
-            foreach (Transform childTransform in path.transform)
+            if (color == GameColor.White && safeIndexes.Contains(i))
             {
-                var tile = childTransform.gameObject.GetComponent<Tile>();
-                if (i % 13 == 0 || (i > 0 && i % 8 == 0))
-                {
-                    tile.isSafe = true;
-                }
-                i++;
+                tile.isSafe = true;
             }
+            i++;
         }
     }
 

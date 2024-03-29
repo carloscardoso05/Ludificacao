@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PieceVisual))]
@@ -8,7 +9,6 @@ public class Piece : MonoBehaviour
     public GameColor color;
     public Player player;
     public bool inHome = true;
-    private int InitialIndex;
     public NavigationList<Tile> Path;
     public event EventHandler<PieceMovedArgs> PieceMoved;
     public class PieceMovedArgs : EventArgs
@@ -24,20 +24,17 @@ public class Piece : MonoBehaviour
     {
         PieceMoved += SendOthersToHome;
         QuizManager.Instance.OnAnswered += MovePiece;
-        InitialIndex = GameManager.Instance.board.GetInitialIndex(color);
-        var whiteTiles = GameManager.Instance.board.GetTiles(GameColor.White);
-        var colorTiles = GameManager.Instance.board.GetTiles(color);
-        Path = Board.GetPath(whiteTiles, colorTiles, InitialIndex);
         MoveToHome();
     }
 
     private void MovePiece(object sender, AnswerData answerData)
     {
-        var isNotThisPiece = ((GameManager.ExtraData)answerData.extraData).selectedPiece.name != name;
+        var extraData = (GameManager.ExtraData) answerData.extraData;
+        var isNotThisPiece = extraData.selectedPiece.name != name;
         var isNotCorrectAnswer = !answerData.selectedAnswer.correct;
         if (isNotThisPiece) return;
         if (isNotCorrectAnswer && !GameManager.Instance.alwaysAnswerRight) return;
-        var times = ((GameManager.ExtraData)answerData.extraData).diceValue;
+        var times = extraData.diceValue + Settings.I.GetDifficultyBonus(answerData.question.difficulty);
         var prevTile = Path.Current;
         Path.Current.pieces.Remove(this);
         Path.CurrentIndex += inHome ? times - 1 : times;
@@ -58,7 +55,9 @@ public class Piece : MonoBehaviour
     {
         if (!Path.Current.isSafe)
         {
-            foreach (Piece p in Path.Current.pieces)
+            Piece[] copyPieces = new Piece[Path.Current.pieces.Count];
+            Path.Current.pieces.CopyTo(copyPieces);
+            foreach (Piece p in copyPieces)
             {
                 if (p.color != color) p.MoveToHome();
             }
