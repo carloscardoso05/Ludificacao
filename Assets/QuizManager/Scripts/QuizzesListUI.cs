@@ -21,13 +21,15 @@ class QuizzesListUI : MonoBehaviour
 
     private void Start()
     {
+        Hide();
         QuizProvider.OnGetQuizzes += LoadQuizzes;
         ListView.selectionType = SelectionType.Single;
         ListView.itemsChosen += OnQuizChosen;
-        TextField.RegisterCallback<ChangeEvent<string>>(searchChanged);
+        TextField.RegisterCallback<ChangeEvent<string>>(SearchChanged);
     }
 
-    private void searchChanged(ChangeEvent<string> changeEvent) {
+    private void SearchChanged(ChangeEvent<string> changeEvent)
+    {
         string search = changeEvent.newValue.ToLower().Trim();
         ListView.itemsSource = Quizzes.Select((quiz) => quiz.title).Where((title) => title.ToLower().Contains(search)).ToList();
     }
@@ -43,7 +45,7 @@ class QuizzesListUI : MonoBehaviour
     void LoadQuizzes(object sender, Dictionary<string, Quiz> quizzes)
     {
         Quizzes = quizzes.Values.ToList();
-        ListView.itemsSource = Quizzes.Select((quiz) => quiz.title).ToList();
+        ListView.itemsSource = Quizzes.Where((quiz) => quiz.questions.Count > 0).Select((quiz) => quiz.title).ToList();
     }
 
     public void Show()

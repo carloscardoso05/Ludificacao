@@ -38,15 +38,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetMenuVisibility(false);
-        ChangeState(GameState.SelectingQuiz);
+        ChangeState(GameState.SelectingPlayersQnt);
         QuizManager.Instance.OnAnswered += ChangeTurn;
         QuizManager.Instance.OnSelectedQuiz += (sender, quiz) =>
         {
-            SetMenuVisibility(true);
-            ChangeState(GameState.SelectingPlayersQnt);
+            ChangeState(GameState.RollingDice);
         };
-        QuizManager.Instance.SelectQuiz();
+        SetMenuVisibility(true);
     }
 
     #endregion
@@ -97,10 +95,11 @@ public class GameManager : MonoBehaviour
 
     public void InitGame(int playersQuantity)
     {
+        ChangeState(GameState.SelectingQuiz);
         ColorsManager.I = new ColorsManager(playersQuantity);
         GeneratePlayers(ColorsManager.I.colors);
         SetMenuVisibility(false);
-        ChangeState(GameState.RollingDice);
+        QuizManager.Instance.SelectQuiz();
         OnTurnChanged?.Invoke(this, ColorsManager.I.currentColor);
     }
 
