@@ -15,7 +15,8 @@ class QuizzesListUI : MonoBehaviour
     public event EventHandler<Quiz> OnQuizSelected;
     public static QuizzesListUI Instance;
 
-    private void Awake() {
+    private void Awake()
+    {
         Instance = this;
     }
 
@@ -37,7 +38,16 @@ class QuizzesListUI : MonoBehaviour
     private void OnQuizChosen(IEnumerable<object> objects)
     {
         int i = ListView.selectedIndex;
-        Quiz quiz = Quizzes[i];
+        Quiz quiz = Quizzes.Where((quiz) => quiz.questions.Count > 0).ToArray()[i];
+        Debug.Log($"id: {quiz.id} len: {quiz.questions.Count()}");
+        OnQuizSelected?.Invoke(this, quiz);
+        Hide();
+    }
+
+    public void SetQuiz(string quizId)
+    {
+        Quiz quiz = Quizzes.Where((quiz) => quiz.id == quizId).Single();
+        Debug.Log($"id: {quiz.id} len: {quiz.questions.Count()}");
         OnQuizSelected?.Invoke(this, quiz);
         Hide();
     }

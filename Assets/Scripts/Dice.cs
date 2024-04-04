@@ -1,4 +1,5 @@
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -53,6 +54,7 @@ public class Dice : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (ColorsManager.I.currentColor == (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"])
         RollDice();
     }
 }

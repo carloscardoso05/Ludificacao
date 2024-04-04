@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 using static Piece;
@@ -24,7 +25,7 @@ public class PieceVisual : MonoBehaviour
 
     private void Update()
     {
-        if (!animationEnded)
+        if (!animationEnded && PhotonNetwork.IsMasterClient)
         {
             bool stepEnded = MovePlayer();
             if (stepEnded)

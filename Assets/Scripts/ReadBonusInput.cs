@@ -9,11 +9,11 @@ public class ReadBonusInput : MonoBehaviour
     private void Start()
     {
         input.onValueChanged.AddListener(ChangeTimer);
-        input.text = Settings.I.GetDifficultyBonus(difficulty).ToString();
+        input.text = GameSettings.Instance.GetDifficultyBonus(difficulty).ToString();
     }
 
     private void ChangeTimer(string newBonus)
     {
-        Settings.I.SetDifficultyBonus(difficulty)(newBonus);
+        GameSettings.Instance.SetDifficultyBonus(difficulty)(newBonus);
     }
 }

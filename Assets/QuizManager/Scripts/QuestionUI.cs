@@ -36,9 +36,9 @@ class QuestionUI : MonoBehaviour
     private void Render(QuestionData questionData)
     {
         timesForDifficulties = new float[] {
-            Settings.I.GetDifficultyTimer(0),
-            Settings.I.GetDifficultyTimer(1),
-            Settings.I.GetDifficultyTimer(2),
+            GameSettings.Instance.GetDifficultyTimer(0),
+            GameSettings.Instance.GetDifficultyTimer(1),
+            GameSettings.Instance.GetDifficultyTimer(2),
         };
         this.questionData = questionData;
         PrepareQuestion(this.questionData.question.question);
@@ -116,6 +116,7 @@ class QuestionUI : MonoBehaviour
 
     public void Show()
     {
+        Debug.Log("show question");
         gameObject.SetActive(true);
         QuestionRuning = true;
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -9,10 +10,12 @@ class QuizProvider : MonoBehaviour
 {
     public event EventHandler<Dictionary<string, Quiz>> OnGetQuizzes;
 
-    private void Start() {
+    private void Start()
+    {
         GetQuizzes();
     }
-    public void GetQuizzes() {
+    public void GetQuizzes()
+    {
         StartCoroutine(GetQuizzesCore());
     }
 

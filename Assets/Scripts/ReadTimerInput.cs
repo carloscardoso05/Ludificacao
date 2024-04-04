@@ -7,10 +7,10 @@ public class ReadTimerInput : MonoBehaviour {
 
     private void Start() {
         input.onValueChanged.AddListener(ChangeTimer);
-        input.text = Settings.I.GetDifficultyTimer(difficulty).ToString();
+        input.text = GameSettings.Instance.GetDifficultyTimer(difficulty).ToString();
     }
 
     private void ChangeTimer(string newTimer) {
-        Settings.I.SetDifficultyTimer(difficulty)(newTimer);
+        GameSettings.Instance.SetDifficultyTimer(difficulty)(newTimer);
     }
 }

@@ -18,6 +18,7 @@ class QuizManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -30,16 +31,16 @@ class QuizManager : MonoBehaviour
                 availableQuestions[i] = Quiz.questions.Keys.Where((id) => Quiz.questions[id].difficulty == i).ToList();
             }
         };
-        QuizzesListUI.Instance.OnQuizSelected += HandleSelectedQuiz;
-        QuestionUI.Instance.OnAnswerSelected += PropagateAnswer;
+        QuizzesListUI.Instance.OnQuizSelected += SendSelectedQuizEvent;
+        QuestionUI.Instance.OnAnswerSelected += SendAnswerEvent;
     }
 
-    private void PropagateAnswer(object sender, AnswerData answerData)
+    public void SendAnswerEvent(object sender, AnswerData answerData)
     {
         OnAnswered?.Invoke(sender, answerData);
     }
 
-    private void HandleSelectedQuiz(object sender, Quiz quiz)
+    public void SendSelectedQuizEvent(object sender, Quiz quiz)
     {
         OnSelectedQuiz?.Invoke(sender, quiz);
     }

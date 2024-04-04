@@ -1,10 +1,12 @@
 using System;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(PieceVisual))]
+[RequireComponent(typeof(PhotonView))]
 public class Piece : MonoBehaviour
 {
+    [SerializeField] PhotonView view;
     public PieceVisual visual;
     public GameColor color;
     public Player player;
@@ -22,6 +24,7 @@ public class Piece : MonoBehaviour
 
     private void Start()
     {
+        view = GetComponent<PhotonView>();
         PieceMoved += SendOthersToHome;
         QuizManager.Instance.OnAnswered += MovePiece;
         MoveToHome();
@@ -29,12 +32,12 @@ public class Piece : MonoBehaviour
 
     private void MovePiece(object sender, AnswerData answerData)
     {
-        var extraData = (GameManager.ExtraData) answerData.extraData;
+        var extraData = (GameManager.ExtraData)answerData.extraData;
         var isNotThisPiece = extraData.selectedPiece.name != name;
         var isNotCorrectAnswer = !answerData.selectedAnswer.correct;
         if (isNotThisPiece) return;
         if (isNotCorrectAnswer && !GameManager.Instance.alwaysAnswerRight) return;
-        var times = extraData.diceValue + Settings.I.GetDifficultyBonus(answerData.question.difficulty);
+        var times = extraData.diceValue + GameSettings.Instance.GetDifficultyBonus(answerData.question.difficulty);
         var prevTile = Path.Current;
         Path.Current.pieces.Remove(this);
         Path.CurrentIndex += inHome ? times - 1 : times;
@@ -74,19 +77,31 @@ public class Piece : MonoBehaviour
 
     private static bool CanMove(Piece piece)
     {
-        var isThisPlayerTurn = ColorsManager.I.currentColor == piece.color;
+        var isThisPieceTurn = ColorsManager.I.currentColor == piece.color;
         var isSelectingPiece = GameManager.Instance.state == GameState.SelectingPiece;
         var isNotFinalTile = !piece.Path.Current.isFinal;
-        return isThisPlayerTurn && isSelectingPiece && isNotFinalTile;
+        return isThisPieceTurn && isSelectingPiece && isNotFinalTile;
     }
 
     private void OnMouseUp()
     {
+        var isNotThisPlayerTurn = ColorsManager.I.currentColor!= (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
+        var localColor = (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
+        if (isNotThisPlayerTurn) return;
         if (CanMove(this))
         {
             var rnd = UnityEngine.Random.Range(0, 3);
             QuizManager.Instance.ShowQuestion(rnd, new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value });
-
+            return;
+        }
+        foreach (Piece p in Path.Current.pieces)
+        {
+            if (CanMove(p))
+            {
+                var rnd = UnityEngine.Random.Range(0, 3);
+                QuizManager.Instance.ShowQuestion(rnd, new GameManager.ExtraData { selectedPiece = p, player = p.player, diceValue = GameManager.Instance.dice.Value });
+                break;
+            }
         }
     }
 

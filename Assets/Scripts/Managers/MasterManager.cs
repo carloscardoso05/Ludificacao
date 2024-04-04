@@ -1,8 +1,13 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MasterManager", menuName = "Singleton/MasterManager", order = 0)]
-public class MasterManager : SingletonScriptableObject<MasterManager>
+public class MasterManager : SingletonMonoBehaviour<MasterManager>
 {
-    private Settings _settings;
-    public Settings Settings { get => Instance._settings; }
+    [SerializeField]
+    private GameSettings _settings;
+    public static GameSettings Settings { get => Instance._settings; }
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 
 [System.Serializable]
-class Quiz
+public class Quiz
 {
     public Dictionary<string, Question> questions = new();
     public string description = "";

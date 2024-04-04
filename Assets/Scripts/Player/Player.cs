@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,11 +8,11 @@ public class Player : MonoBehaviour
     public int points;
     public List<Piece> pieces;
     public GameColor color;
+    public Photon.Realtime.Player photonPlayer;
 
     private void Start()
     {
         QuizManager.Instance.OnAnswered += AddPoints;
-        InstantiatePieces();
     }
 
 
@@ -25,21 +26,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void InstantiatePieces()
+    public void InstantiatePieces()
     {
         var initialIndex = GameManager.Instance.board.GetInitialIndex(color);
         var whiteTiles = GameManager.Instance.board.GetTiles(GameColor.White);
         var colorTiles = GameManager.Instance.board.GetTiles(color);
         for (int i = 0; i < 4; i++)
         {
-            var path = Board.GetPath(whiteTiles, colorTiles, initialIndex);
-            var piece = Instantiate(piecePrefab).GetComponent<Piece>();
-            var visual = piece.GetComponent<PieceVisual>();
-            piece.name = color.ToString() + "Piece" + i.ToString();
-            piece.transform.parent = transform;
-            Vector2 homePosition = GameManager.Instance.board.GetHome(color).transform.position;
             Vector2 offset = GameManager.Instance.board.GetHomeOffset(i);
+            Vector2 homePosition = (Vector2)GameManager.Instance.board.GetHome(color).transform.position + offset;
+            var pieceName = color.ToString() + "Piece" + i.ToString();
+            var path = Board.GetPath(whiteTiles, colorTiles, initialIndex);
+            var piece = Instantiate(piecePrefab, homePosition, Quaternion.identity).GetComponent<Piece>();
+            piece.name = pieceName;
+            var visual = piece.GetComponent<PieceVisual>();
             visual.HomePosition = homePosition + offset;
+            piece.transform.parent = transform;
             piece.color = color;
             piece.player = this;
             piece.Path = path;

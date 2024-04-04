@@ -1,1 +1,1 @@
-enum Difficulty {easy, medium, hard};
+public enum Difficulty {easy, medium, hard};
