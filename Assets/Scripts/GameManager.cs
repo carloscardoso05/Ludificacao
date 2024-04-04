@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ExitGames.Client.Photon;
 using Newtonsoft.Json;
 using Photon.Pun;
@@ -33,6 +34,15 @@ public class GameManager : MonoBehaviour
         public Piece selectedPiece;
         public Player player;
     }
+    public class SimpleAnswerData
+    {
+        public Question question;
+        public Answer selectedAnswer;
+        public float elapsedTime;
+        public int diceValue;
+        public string selectedPieceName;
+        public string playerName;
+    }
 
     #region Unity Life Cycle
 
@@ -48,7 +58,17 @@ public class GameManager : MonoBehaviour
         RaiseEventOptions options = new() { Receivers = ReceiverGroup.Others };
         if (whoAnsweredIsThis)
         {
-            PhotonNetwork.RaiseEvent(QuestionAnsweredEventCode, answerData, options, SendOptions.SendReliable);
+            SimpleAnswerData simpleAnswerData = new()
+            {
+                elapsedTime = answerData.elapsedTime,
+                question = answerData.question,
+                selectedAnswer = answerData.selectedAnswer,
+                diceValue = extraData.diceValue,
+                playerName = extraData.player.name,
+                selectedPieceName = extraData.selectedPiece.name,
+            };
+            var data = JsonConvert.SerializeObject(simpleAnswerData);
+            PhotonNetwork.RaiseEvent(QuestionAnsweredEventCode, data, options, SendOptions.SendReliable);
         }
     }
     private void SendQuizSelectedEvent(object sender, Quiz quiz)
@@ -74,9 +94,15 @@ public class GameManager : MonoBehaviour
         byte eventCode = eventData.Code;
         if (eventCode == QuestionAnsweredEventCode)
         {
-            Debug.Log("evento respondido recebido");
-            AnswerData answerData = (AnswerData)eventData.CustomData;
-            ExtraData extraData = (ExtraData)answerData.extraData;
+            Debug.Log("evento questão respondida recebido");
+            SimpleAnswerData simpleAnswerData = JsonConvert.DeserializeObject<SimpleAnswerData>(eventData.CustomData.ToString());
+            ExtraData extraData = new()
+            {
+                diceValue = simpleAnswerData.diceValue,
+                player = Resources.FindObjectsOfTypeAll<Player>().Where((p) => p.name == simpleAnswerData.playerName).Single(),
+                selectedPiece = Resources.FindObjectsOfTypeAll<Piece>().Where((p) => p.name == simpleAnswerData.selectedPieceName).Single(),
+            };
+            AnswerData answerData = new(simpleAnswerData.question, simpleAnswerData.selectedAnswer, simpleAnswerData.elapsedTime, extraData);
             var whoAnsweredIsNotThis = extraData.player.color != (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
             QuizManager.Instance.SendAnswerEvent(eventData.Sender, answerData);
         }

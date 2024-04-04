@@ -25,7 +25,7 @@ public class PieceVisual : MonoBehaviour
 
     private void Update()
     {
-        if (!animationEnded && PhotonNetwork.IsMasterClient)
+        if (!animationEnded)
         {
             bool stepEnded = MovePlayer();
             if (stepEnded)
