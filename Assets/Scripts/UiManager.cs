@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -33,6 +34,9 @@ public class UiManager : MonoBehaviour
         RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshPro>();
         GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshPro>();
         YellowPoints = playersInfo.transform.Find("YellowInfo").GetComponentInChildren<TextMeshPro>();
+        if (PhotonNetwork.OfflineMode) {
+            MainMenu.gameObject.SetActive(true);
+        }
     }
 
     private void EndGame(object sender, EndGameArgs args)

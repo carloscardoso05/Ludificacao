@@ -13,7 +13,7 @@ public class Board : MonoBehaviour
         {GameColor.Green, 26},
         {GameColor.Yellow, 39},
     };
-    private readonly Vector3[] offsets = { Vector3.zero, new(2, 0), new(2, 2), new(0, 2) };
+    private readonly Vector3[] offsets = { Vector3.zero, new(1, 0), new(1, 1), new(0, 1) };
 
     private void Awake()
     {

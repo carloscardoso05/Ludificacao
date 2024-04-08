@@ -119,13 +119,16 @@ public class GameManager : MonoBehaviour
         // ChangeState(GameState.SelectingPlayersQnt);
         ChangeState(GameState.SelectingQuiz);
 
-        QuizManager.Instance.OnAnswered += SendQuestionAnsweredEvent;
+        if (!PhotonNetwork.OfflineMode)
+        {
+            QuizManager.Instance.OnAnswered += SendQuestionAnsweredEvent;
+            QuizManager.Instance.OnSelectedQuiz += SendQuizSelectedEvent;
+        }
         QuizManager.Instance.OnAnswered += ChangeTurn;
         QuizManager.Instance.OnSelectedQuiz += (sender, quiz) => ChangeState(GameState.RollingDice);
-        QuizManager.Instance.OnSelectedQuiz += SendQuizSelectedEvent;
         // SetMenuVisibility(true);
         SetMenuVisibility(false);
-        InitGame(PhotonNetwork.PlayerList.Length);
+        if (!PhotonNetwork.OfflineMode) InitGame(PhotonNetwork.PlayerList.Length);
     }
 
     #endregion
@@ -167,12 +170,15 @@ public class GameManager : MonoBehaviour
         {
             var playerGO = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
             var player = playerGO.GetComponent<Player>();
-            var photonPlayer = PhotonNetwork.PlayerList[i];
-            Hashtable photonPlayerCustomProps = new() {
-              {"Color", color}
-            };
-            photonPlayer.SetCustomProperties(photonPlayerCustomProps);
-            player.photonPlayer = photonPlayer;
+            if (!PhotonNetwork.OfflineMode)
+            {
+                var photonPlayer = PhotonNetwork.PlayerList[i];
+                Hashtable photonPlayerCustomProps = new() {
+                    {"Color", color}
+                };
+                photonPlayer.SetCustomProperties(photonPlayerCustomProps);
+                player.photonPlayer = photonPlayer;
+            }
             player.color = color;
             playerGO.name = color.ToString() + "Player";
             playerGO.transform.parent = playersGO.transform;

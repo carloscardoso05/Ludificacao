@@ -85,9 +85,11 @@ public class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
-        var isNotThisPlayerTurn = ColorsManager.I.currentColor!= (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
+        if (!PhotonNetwork.OfflineMode) {
         var localColor = (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
-        if (isNotThisPlayerTurn) return;
+        var isNotThisPlayerTurn = ColorsManager.I.currentColor != localColor;
+        if (isNotThisPlayerTurn && !PhotonNetwork.OfflineMode) return;
+        }
         if (CanMove(this))
         {
             var rnd = UnityEngine.Random.Range(0, 3);

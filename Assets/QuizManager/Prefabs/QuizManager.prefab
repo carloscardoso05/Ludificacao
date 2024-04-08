@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 308798804913508708}
   - component: {fileID: 308798804913508710}
   - component: {fileID: 308798804913508709}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 308798805135810690}
   - component: {fileID: 2632267164327893829}
   - component: {fileID: 2678236902818410108}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Question
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 308798805165858827}
   - component: {fileID: 308798805165858829}
   - component: {fileID: 308798805165858828}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 308798805168560563}
   - component: {fileID: 308798805168560565}
   - component: {fileID: 308798805168560564}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: QuestionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -510,7 +510,7 @@ GameObject:
   - component: {fileID: 308798805216257917}
   - component: {fileID: 308798805216257919}
   - component: {fileID: 308798805216257918}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -645,7 +645,7 @@ GameObject:
   - component: {fileID: 308798805255998040}
   - component: {fileID: 308798805255998042}
   - component: {fileID: 308798805255998041}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -782,7 +782,7 @@ GameObject:
   - component: {fileID: 308798805368650840}
   - component: {fileID: 308798805368650823}
   - component: {fileID: 308798805368650822}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: AnswerButton4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,7 +831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7843138, g: 0.75294125, b: 0.20784315, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -902,7 +902,7 @@ GameObject:
   m_Component:
   - component: {fileID: 308798805438224782}
   - component: {fileID: 308798805438224783}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Difficulty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -948,7 +948,7 @@ GameObject:
   m_Component:
   - component: {fileID: 308798805547646346}
   - component: {fileID: 308798805547646348}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -998,7 +998,7 @@ GameObject:
   - component: {fileID: 308798805690638250}
   - component: {fileID: 308798805690638249}
   - component: {fileID: 308798805690638248}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: AnswerButton3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1047,7 +1047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8431373, g: 0.3019608, b: 0.22352943, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1120,7 +1120,7 @@ GameObject:
   - component: {fileID: 308798805721060260}
   - component: {fileID: 308798805721060259}
   - component: {fileID: 308798805721060258}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: AnswerButton1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.22352943, g: 0.47450984, b: 0.8431373, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1241,7 +1241,7 @@ GameObject:
   - component: {fileID: 308798805784746898}
   - component: {fileID: 308798805784746900}
   - component: {fileID: 308798805784746899}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1374,7 +1374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 308798805953494246}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Answers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1416,7 +1416,7 @@ GameObject:
   - component: {fileID: 308798806027244597}
   - component: {fileID: 308798806027244596}
   - component: {fileID: 308798806027244595}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: QuizzesListUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1479,7 +1479,7 @@ GameObject:
   - component: {fileID: 308798806140359431}
   - component: {fileID: 308798806140359449}
   - component: {fileID: 308798806140359448}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1556,7 +1556,7 @@ GameObject:
   - component: {fileID: 308798806316676505}
   - component: {fileID: 308798806316676507}
   - component: {fileID: 308798806316676506}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1693,7 +1693,7 @@ GameObject:
   - component: {fileID: 308798806352234555}
   - component: {fileID: 308798806352234554}
   - component: {fileID: 308798806352234553}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: AnswerButton2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1742,7 +1742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.22352943, g: 0.8431373, b: 0.44705886, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1816,7 +1816,7 @@ GameObject:
   - component: {fileID: 308798806460747923}
   - component: {fileID: 308798806460747922}
   - component: {fileID: 308798806460747926}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: QuizManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1839,7 +1839,7 @@ RectTransform:
   - {fileID: 308798806547061004}
   - {fileID: 308798806027244597}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1933,7 +1933,7 @@ GameObject:
   m_Component:
   - component: {fileID: 308798806547061004}
   - component: {fileID: 308798806547061005}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: QuizProvider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

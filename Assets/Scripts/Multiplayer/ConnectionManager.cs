@@ -32,8 +32,17 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         message.text = "Carregando...";
     }
 
+    public void OnClick_ConnectOffline()
+    {
+        PhotonNetwork.OfflineMode = true;
+        message.text = "";
+        message.text = "Carregando...";
+        SceneManager.LoadScene("OfflineGameScene");
+    }
+
     public override void OnConnectedToMaster()
     {
+        if (PhotonNetwork.OfflineMode) return;
         PhotonNetwork.JoinLobby();
         SceneManager.LoadScene("Lobby");
     }

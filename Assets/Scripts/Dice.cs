@@ -54,7 +54,7 @@ public class Dice : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (ColorsManager.I.currentColor == (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"])
+        if (PhotonNetwork.OfflineMode || (ColorsManager.I.currentColor == (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"]))
         RollDice();
     }
 }
