@@ -22,12 +22,16 @@ public class PlayerIcon : MonoBehaviour
         foreach (GameObject icon in icons)
         {
             icon.transform.localScale = Vector3.one;
+            Seta(icon).SetActive(false);
         }
     }
     private void Update()
     {
         if (currentIcon != null)
         {
+            if (!Seta(currentIcon).activeSelf) {
+                Seta(currentIcon).SetActive(true);
+            }
             var x = (float)(math.sin(Time.time) + 2) / 3;
             var y = (float)(math.sin(Time.time) + 2) / 3;
             var newScale = new Vector3(x, y, 1);
@@ -45,5 +49,9 @@ public class PlayerIcon : MonoBehaviour
             GameColor.Yellow => YellowIcon,
             _ => throw new ArgumentException("Branco não é válido")
         };
+    }
+
+    private GameObject Seta(GameObject icon) {
+        return icon.transform.parent.Find("Seta").gameObject;
     }
 }
