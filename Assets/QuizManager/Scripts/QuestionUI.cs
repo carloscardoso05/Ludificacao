@@ -92,7 +92,9 @@ class QuestionUI : MonoBehaviour
         var progress = transform.Find("Header").Find("Timer");
         var progressText = progress.GetComponent<TextMeshProUGUI>();
         string timeString = Math.Floor(maxTime).ToString();
-        progressText.text = $"Tempo restante: {timeString}";
+        progressText.text = timeString;
+        Slider timerBar = GetComponentInChildren<Slider>();
+        timerBar.value = 1;
     }
 
     private void UpdateTimer(float timeElapsedInSecconds)
@@ -101,7 +103,9 @@ class QuestionUI : MonoBehaviour
         var progressText = progress.GetComponent<TextMeshProUGUI>();
         elapsedTime += timeElapsedInSecconds;
         string timeString = Math.Floor(maxTime - elapsedTime).ToString();
-        progressText.text = $"Tempo restante: {timeString}";
+        progressText.text = timeString;
+        Slider timerBar = GetComponentInChildren<Slider>();
+        timerBar.value = (maxTime - elapsedTime)/maxTime;
         if (elapsedTime > maxTime)
         {
             Debug.Log("Tempo excedido");
