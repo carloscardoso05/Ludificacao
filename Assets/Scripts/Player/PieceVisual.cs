@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 using static Piece;
@@ -21,6 +23,7 @@ public class PieceVisual : MonoBehaviour
     {
         piece.PieceMoved += Reorganize;
         piece.PieceMoved += GameManager.Instance.CheckPlayerWin;
+        GetComponentInChildren<TextMeshPro>().text = (int.Parse(name.Last().ToString()) + 1).ToString();
     }
 
     private void Update()

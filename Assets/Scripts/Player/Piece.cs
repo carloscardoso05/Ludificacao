@@ -93,7 +93,7 @@ public class Piece : MonoBehaviour
         if (CanMove(this))
         {
             var rnd = UnityEngine.Random.Range(0, 3);
-            QuizManager.Instance.ShowQuestion(rnd, new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value });
+            QuizManager.Instance.ShowRandomQuestion(new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value });
             return;
         }
         foreach (Piece p in Path.Current.pieces)
@@ -101,7 +101,7 @@ public class Piece : MonoBehaviour
             if (CanMove(p))
             {
                 var rnd = UnityEngine.Random.Range(0, 3);
-                QuizManager.Instance.ShowQuestion(rnd, new GameManager.ExtraData { selectedPiece = p, player = p.player, diceValue = GameManager.Instance.dice.Value });
+                QuizManager.Instance.ShowRandomQuestion(new GameManager.ExtraData { selectedPiece = p, player = p.player, diceValue = GameManager.Instance.dice.Value });
                 break;
             }
         }

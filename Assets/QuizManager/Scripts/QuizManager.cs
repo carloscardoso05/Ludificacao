@@ -10,7 +10,7 @@ class QuizManager : MonoBehaviour
     private bool answering = false;
     public bool selectingQuiz = false;
     public event EventHandler<QuestionData> OnChoseQuestion;
-    private List<string>[] availableQuestions = new List<string>[3];
+    private List<string> availableQuestions = new();
     public event EventHandler<AnswerData> OnAnswered;
     public event EventHandler<Quiz> OnSelectedQuiz;
     public static QuizManager Instance;
@@ -26,10 +26,7 @@ class QuizManager : MonoBehaviour
         QuizzesListUI.Instance.OnQuizSelected += (sender, quiz) =>
         {
             Quiz = quiz;
-            for (int i = 0; i < 3; i++)
-            {
-                availableQuestions[i] = Quiz.questions.Keys.Where((id) => Quiz.questions[id].difficulty == i).ToList();
-            }
+            availableQuestions.AddRange(Quiz.questions.Keys);
         };
         QuizzesListUI.Instance.OnQuizSelected += SendSelectedQuizEvent;
         QuestionUI.Instance.OnAnswerSelected += SendAnswerEvent;
@@ -56,20 +53,19 @@ class QuizManager : MonoBehaviour
         selectingQuiz = true;
     }
 
-    public void ShowQuestion(int difficulty, object extraData)
+    public void ShowRandomQuestion(object extraData)
     {
         if (selectingQuiz) throw new Exception("Não pode responder uma questão enquanto seleciona um quiz");
         if (Quiz is null) throw new Exception("Nenhum Quiz foi selecionado ainda");
-        List<string> difficultyQuestions = availableQuestions[difficulty];
-        if (difficultyQuestions.Count == 0)
-        {
-            difficultyQuestions = Quiz.questions.Keys.Where((id) => Quiz.questions[id].difficulty == difficulty).ToList();
-            Debug.Log("Resetando difficuldade " + difficulty);
+
+        if (availableQuestions.Count == 0) {
+            availableQuestions.AddRange(Quiz.questions.Keys);
         }
-        int index = UnityEngine.Random.Range(0, difficultyQuestions.Count);
-        string questionId = difficultyQuestions.ElementAt(index);
+
+        int index = UnityEngine.Random.Range(0, availableQuestions.Count);
+        string questionId = availableQuestions.ElementAt(index);
         Question question = Quiz.questions[questionId];
-        difficultyQuestions.RemoveAt(index);
+        availableQuestions.RemoveAt(index);
 
         QuestionData questionData = new()
         {
