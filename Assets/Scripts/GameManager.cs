@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     private Player[] players;
     public const byte QuestionAnsweredEventCode = 1;
     public const byte QuizSelectedEventCode = 2;
+    public const byte DiceRolled = 3;
 
     #region Tester Tools
 
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour
         public Piece selectedPiece;
         public Player player;
     }
+
+    [Serializable()]
     public class SimpleAnswerData
     {
         public Question question;
@@ -110,6 +113,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("evento quiz selecionado recebido");
             QuizzesListUI.Instance.SetQuiz((string)eventData.CustomData);
+        }
+        if (eventCode == DiceRolled) {
+            int diceNum = (int)eventData.CustomData;
+            dice.RollDiceToNum(diceNum);
         }
     }
 
