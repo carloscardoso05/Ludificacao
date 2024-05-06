@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 class QuestionUI : MonoBehaviour
 {
+    [SerializeField] private GameObject icons;
     public event EventHandler<AnswerData> OnAnswerSelected;
     private bool QuestionRuning = false;
     private float maxTime;
@@ -18,7 +19,8 @@ class QuestionUI : MonoBehaviour
     private readonly Color[] difficultiesBGColors = { Color.green, Color.yellow, Color.red };
     public static QuestionUI Instance;
 
-    private void Awake() {
+    private void Awake()
+    {
         Instance = this;
     }
 
@@ -26,6 +28,8 @@ class QuestionUI : MonoBehaviour
     {
         Hide();
         QuizManager.Instance.OnChoseQuestion += (sender, question) => Render(question);
+        QuizManager.Instance.OnAnswered += (sender, question) => SetPlayerIconsVisibility((_) => false);
+        SetPlayerIconsVisibility((_) => false);
     }
 
     private void Update()
@@ -45,7 +49,21 @@ class QuestionUI : MonoBehaviour
         PrepareAnswers(this.questionData.question.answers);
         PrepareDifficulty(this.questionData.question.difficulty);
         PrepareTimer(this.questionData.question.difficulty);
+        SetPlayerIconsVisibility((color) => color == questionData.color);
         Show();
+    }
+
+    private void SetPlayerIconsVisibility(Func<GameColor?, bool> func)
+    {
+        var colors = Enum.GetValues(typeof(GameColor)).Cast<GameColor>().ToArray();
+        foreach (var gColor in colors)
+        {
+            var icon = icons.transform.Find($"{gColor}Icon");
+            if (icon != null)
+            {
+                icon.gameObject.SetActive(func(gColor));
+            }
+        }
     }
 
     private void PrepareQuestion(string text)
@@ -105,7 +123,7 @@ class QuestionUI : MonoBehaviour
         string timeString = Math.Floor(maxTime - elapsedTime).ToString();
         progressText.text = timeString;
         Slider timerBar = GetComponentInChildren<Slider>();
-        timerBar.value = (maxTime - elapsedTime)/maxTime;
+        timerBar.value = (maxTime - elapsedTime) / maxTime;
         if (elapsedTime > maxTime)
         {
             Debug.Log("Tempo excedido");

@@ -85,15 +85,17 @@ public class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (!PhotonNetwork.OfflineMode) {
-        var localColor = (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
-        var isNotThisPlayerTurn = ColorsManager.I.currentColor != localColor;
-        if (isNotThisPlayerTurn && !PhotonNetwork.OfflineMode) return;
+        if (!PhotonNetwork.OfflineMode)
+        {
+            var localColor = (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
+            var isNotThisPlayerTurn = ColorsManager.I.currentColor != localColor;
+            if (isNotThisPlayerTurn && !PhotonNetwork.OfflineMode) return;
         }
         if (CanMove(this))
         {
             var rnd = UnityEngine.Random.Range(0, 3);
-            QuizManager.Instance.ShowRandomQuestion(new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value });
+            var data = new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value };
+            QuizManager.Instance.ShowRandomQuestion(data, color);
             return;
         }
         foreach (Piece p in Path.Current.pieces)
@@ -101,7 +103,8 @@ public class Piece : MonoBehaviour
             if (CanMove(p))
             {
                 var rnd = UnityEngine.Random.Range(0, 3);
-                QuizManager.Instance.ShowRandomQuestion(new GameManager.ExtraData { selectedPiece = p, player = p.player, diceValue = GameManager.Instance.dice.Value });
+                var data = new GameManager.ExtraData { selectedPiece = p, player = p.player, diceValue = GameManager.Instance.dice.Value };
+                QuizManager.Instance.ShowRandomQuestion(data, p.color);
                 break;
             }
         }

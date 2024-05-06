@@ -53,12 +53,13 @@ class QuizManager : MonoBehaviour
         selectingQuiz = true;
     }
 
-    public void ShowRandomQuestion(object extraData)
+    public void ShowRandomQuestion(object extraData, GameColor color)
     {
         if (selectingQuiz) throw new Exception("Não pode responder uma questão enquanto seleciona um quiz");
         if (Quiz is null) throw new Exception("Nenhum Quiz foi selecionado ainda");
 
-        if (availableQuestions.Count == 0) {
+        if (availableQuestions.Count == 0)
+        {
             availableQuestions.AddRange(Quiz.questions.Keys);
         }
 
@@ -71,6 +72,7 @@ class QuizManager : MonoBehaviour
         {
             question = question,
             extraData = extraData,
+            color = color
         };
         OnChoseQuestion?.Invoke(this, questionData);
         answering = true;
