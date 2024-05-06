@@ -1,11 +1,21 @@
 using Photon.Pun;
 using Photon.Realtime;
 
-public class RoomManager : SingletonMonoBehaviour<MonoBehaviourPunCallbacks>
+public class RoomManager : MonoBehaviourPunCallbacks
 {
+    public static RoomManager Instance;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public Room Room

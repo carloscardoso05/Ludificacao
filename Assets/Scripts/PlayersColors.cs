@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 
-public enum GameColor { White, Blue, Red, Green, Yellow };
-
 public class ColorsManager
 {
     public GameColor[] colors;

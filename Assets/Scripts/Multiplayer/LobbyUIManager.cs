@@ -14,6 +14,7 @@ public class LobbyUIManager : MonoBehaviourPunCallbacks
 
     public void OnClick_JoinRoom()
     {
+        roomName.text = roomName.text.Trim();
         if (RoomNameIsNotEmpty())
         {
             roomManager.JoinRoom(roomName.text);
@@ -23,6 +24,7 @@ public class LobbyUIManager : MonoBehaviourPunCallbacks
 
     public void OnClick_CreateRoom()
     {
+        roomName.text = roomName.text.Trim();
         if (RoomNameIsNotEmpty())
         {
             roomManager.CreateRoom(roomName.text);

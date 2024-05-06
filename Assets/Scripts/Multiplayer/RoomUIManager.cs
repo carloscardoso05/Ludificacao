@@ -1,3 +1,4 @@
+using EnumExtension;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -51,7 +52,7 @@ public class RoomUIManager : MonoBehaviourPunCallbacks
                 var nickName = players[i].NickName;
                 var color = ColorsManager.GetColorsByPlayersQty(4)[i];
                 var playerText = transform.Find("Players").Find($"Player{i + 1}");
-                playerText.GetComponent<TextMeshProUGUI>().text = $"{nickName} - {color}";
+                playerText.GetComponent<TextMeshProUGUI>().text = $"{nickName} - {color.ToStringPtBr()}";
             }
         }
     }
