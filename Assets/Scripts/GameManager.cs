@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        Application.runInBackground = true;
     }
 
     private void SendQuestionAnsweredEvent(object sender, AnswerData answerData)
