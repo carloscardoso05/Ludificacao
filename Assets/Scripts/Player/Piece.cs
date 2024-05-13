@@ -85,6 +85,7 @@ public class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (GameManager.Instance.state != GameState.SelectingPiece) return;
         if (!PhotonNetwork.OfflineMode)
         {
             var localColor = (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];

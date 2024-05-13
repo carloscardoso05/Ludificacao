@@ -115,7 +115,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("evento quiz selecionado recebido");
             QuizzesListUI.Instance.SetQuiz((string)eventData.CustomData);
         }
-        if (eventCode == DiceRolled) {
+        if (eventCode == DiceRolled)
+        {
             int diceNum = (int)eventData.CustomData;
             dice.RollDiceToNum(diceNum);
         }
@@ -134,6 +135,7 @@ public class GameManager : MonoBehaviour
         }
         QuizManager.Instance.OnAnswered += ChangeTurn;
         QuizManager.Instance.OnSelectedQuiz += (sender, quiz) => ChangeState(GameState.RollingDice);
+        QuizManager.Instance.OnChoseQuestion += (_, _) => ChangeState(GameState.AnsweringQuestion);
         // SetMenuVisibility(true);
         SetMenuVisibility(false);
         if (!PhotonNetwork.OfflineMode) InitGame(PhotonNetwork.PlayerList.Length);
