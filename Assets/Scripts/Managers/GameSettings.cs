@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class GameSettings : SingletonMonoBehaviour<GameSettings>
+public class GameSettings : MonoBehaviour
 {
     [SerializeField]
     private string _gameVersion = "0.0.0";
@@ -10,8 +10,18 @@ public class GameSettings : SingletonMonoBehaviour<GameSettings>
     private string _nickName = "NickName";
     public string NickName { get => _nickName; set => _nickName = value; }
 
+    public static GameSettings Instance;
+
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         DontDestroyOnLoad(gameObject);
     }
 
