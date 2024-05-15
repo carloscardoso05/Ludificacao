@@ -6,11 +6,13 @@ using UnityEngine.UI;
 
 public class RoomUIManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private GameObject SettingsUIManager;
     [SerializeField] private Canvas roomCanvas;
     [SerializeField] private RoomManager roomManager;
     [SerializeField] private Button exitRoom;
     [SerializeField] private Button settings;
     [SerializeField] private Button startGame;
+    [SerializeField] private Button settingsClose;
     [SerializeField] private TextMeshProUGUI roomName;
     private float roomUpdateTimer = 1.5f;
 
@@ -18,13 +20,11 @@ public class RoomUIManager : MonoBehaviourPunCallbacks
     {
         exitRoom.onClick.AddListener(() => roomManager.LeaveRoom());
 
-        startGame.onClick.AddListener(() =>
-        {
-            if (PhotonNetwork.PlayerList.Length > 1)
-            {
-                roomManager.StartGame();
-            }
-        });
+        startGame.onClick.AddListener(() =>roomManager.StartGame());
+
+        settings.onClick.AddListener(() => roomManager.OpenSettings(SettingsUIManager, roomCanvas.gameObject));
+        
+        settingsClose.onClick.AddListener(() => roomManager.CloseSettings(SettingsUIManager, roomCanvas.gameObject));
     }
 
     private void Update()

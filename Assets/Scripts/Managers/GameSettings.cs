@@ -1,15 +1,12 @@
 using System;
+using ExitGames.Client.Photon;
+using Newtonsoft.Json;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class GameSettings : MonoBehaviour
+public class GameSettings : MonoBehaviourPunCallbacks
 {
-    [SerializeField]
-    private string _gameVersion = "0.0.0";
-    public string GameVersion { get => _gameVersion; }
-    [SerializeField]
-    private string _nickName = "NickName";
-    public string NickName { get => _nickName; set => _nickName = value; }
-
     public static GameSettings Instance;
 
     private void Awake()
@@ -25,14 +22,30 @@ public class GameSettings : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    #region Bonus
 
-    public int easyBonus = 1;
-    public int mediumBonus = 2;
-    public int hardBonus = 3;
-    public float easyTimer = 30;
-    public float mediumTimer = 60;
-    public float hardTimer = 90;
+    #region Bonus
+    [SerializeField]
+    private Settings _settings = new();
+    public Settings Settings
+    {
+        get => _settings;
+        set
+        {
+            _settings = value;
+            SendSettingsDefinedEvent(value);
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        SendSettingsDefinedEvent(Settings);
+    }
+
+    private void Start()
+    {
+        Settings.SettingsChanged += (settings) => SendSettingsDefinedEvent(settings);
+    }
 
     #endregion
 
@@ -40,9 +53,9 @@ public class GameSettings : MonoBehaviour
     {
         return difficulty switch
         {
-            0 => easyBonus,
-            1 => mediumBonus,
-            2 => hardBonus,
+            0 => Settings.EasyBonus,
+            1 => Settings.MediumBonus,
+            2 => Settings.HardBonus,
             _ => throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
         };
     }
@@ -51,9 +64,9 @@ public class GameSettings : MonoBehaviour
     {
         return difficulty switch
         {
-            0 => easyTimer,
-            1 => mediumTimer,
-            2 => hardTimer,
+            0 => Settings.EasyTimer,
+            1 => Settings.MediumTimer,
+            2 => Settings.HardTimer,
             _ => throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
         };
     }
@@ -65,11 +78,11 @@ public class GameSettings : MonoBehaviour
             switch (difficulty)
             {
                 case 0:
-                    easyTimer = float.Parse(newTimer); break;
+                    Settings.EasyTimer = float.Parse(newTimer); break;
                 case 1:
-                    mediumTimer = float.Parse(newTimer); break;
+                    Settings.MediumTimer = float.Parse(newTimer); break;
                 case 2:
-                    hardTimer = float.Parse(newTimer); break;
+                    Settings.HardTimer = float.Parse(newTimer); break;
                 default:
                     throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
             }
@@ -82,14 +95,22 @@ public class GameSettings : MonoBehaviour
             switch (difficulty)
             {
                 case 0:
-                    easyBonus = int.Parse(newBonus); break;
+                    Settings.EasyBonus = int.Parse(newBonus); break;
                 case 1:
-                    mediumBonus = int.Parse(newBonus); break;
+                    Settings.MediumBonus = int.Parse(newBonus); break;
                 case 2:
-                    hardBonus = int.Parse(newBonus); break;
+                    Settings.HardBonus = int.Parse(newBonus); break;
                 default:
                     throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
             }
         };
+    }
+
+    private void SendSettingsDefinedEvent(Settings settings)
+    {
+        RaiseEventOptions options = new() { Receivers = ReceiverGroup.Others };
+        PhotonNetwork.RaiseEvent(NetworkEventManager.SettingsDefined, JsonConvert.SerializeObject(settings), options, SendOptions.SendReliable);
+        Debug.Log("Configurações enviadas");
+        Debug.Log(JsonConvert.SerializeObject(settings));
     }
 }

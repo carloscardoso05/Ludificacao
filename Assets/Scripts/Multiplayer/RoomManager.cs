@@ -1,5 +1,7 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -30,6 +32,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             MaxPlayers = 4
         };
         PhotonNetwork.CreateRoom(roomName, options, TypedLobby.Default);
+        PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
+        Debug.Log("Master client aqui");
     }
 
     public void JoinRoom(string roomName)
@@ -44,6 +48,23 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("GameScene");
+        Debug.Log($"IsMasterClient: {PhotonNetwork.IsMasterClient}");
+        if (PhotonNetwork.PlayerList.Length > 1 && PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("GameScene");
+        }
+    }
+
+    public void OpenSettings(GameObject settings, GameObject room)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        settings.SetActive(true);
+        room.SetActive(false);
+    }
+
+    public void CloseSettings(GameObject settings, GameObject room)
+    {
+        settings.SetActive(false);
+        room.SetActive(true);
     }
 }

@@ -24,6 +24,20 @@ public class Dice : MonoBehaviour
     }
     private bool isAnimating = false;
 
+    public static Dice Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         spriteResolver = GetComponent<SpriteResolver>();
@@ -89,6 +103,6 @@ public class Dice : MonoBehaviour
     private void SendDiceRolledEvent()
     {
         RaiseEventOptions options = new() { Receivers = ReceiverGroup.Others };
-        PhotonNetwork.RaiseEvent(GameManager.DiceRolled, Value, options, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(NetworkEventManager.DiceRolled, Value, options, SendOptions.SendReliable);
     }
 }

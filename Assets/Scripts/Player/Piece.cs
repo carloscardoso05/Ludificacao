@@ -94,7 +94,6 @@ public class Piece : MonoBehaviour
         }
         if (CanMove(this))
         {
-            var rnd = UnityEngine.Random.Range(0, 3);
             var data = new GameManager.ExtraData { selectedPiece = this, player = player, diceValue = GameManager.Instance.dice.Value };
             QuizManager.Instance.ShowRandomQuestion(data, color);
             return;
@@ -103,7 +102,6 @@ public class Piece : MonoBehaviour
         {
             if (CanMove(p))
             {
-                var rnd = UnityEngine.Random.Range(0, 3);
                 var data = new GameManager.ExtraData { selectedPiece = p, player = p.player, diceValue = GameManager.Instance.dice.Value };
                 QuizManager.Instance.ShowRandomQuestion(data, p.color);
                 break;
