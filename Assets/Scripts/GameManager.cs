@@ -46,12 +46,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        Application.runInBackground = true;
     }
 
-    private void Start()
+    private async void Start()
     {
         // ChangeState(GameState.SelectingPlayersQnt);
+        await QuizProvider.Instance.GetQuizzes();
         ChangeState(GameState.SelectingQuiz);
         QuizManager.Instance.OnAnswered += ChangeTurn;
         QuizManager.Instance.OnSelectedQuiz += (sender, quiz) => ChangeState(GameState.RollingDice);

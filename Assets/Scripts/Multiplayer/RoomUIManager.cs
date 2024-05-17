@@ -20,10 +20,10 @@ public class RoomUIManager : MonoBehaviourPunCallbacks
     {
         exitRoom.onClick.AddListener(() => roomManager.LeaveRoom());
 
-        startGame.onClick.AddListener(() =>roomManager.StartGame());
+        startGame.onClick.AddListener(() => roomManager.StartGame());
 
         settings.onClick.AddListener(() => roomManager.OpenSettings(SettingsUIManager, roomCanvas.gameObject));
-        
+
         settingsClose.onClick.AddListener(() => roomManager.CloseSettings(SettingsUIManager, roomCanvas.gameObject));
     }
 
@@ -47,11 +47,16 @@ public class RoomUIManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             var players = PhotonNetwork.PlayerList;
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < 4; i++)
             {
-                var nickName = players[i].NickName;
                 var color = ColorsManager.GetColorsByPlayersQty(4)[i];
                 var playerText = transform.Find("Players").Find($"Player{i + 1}");
+                if (i >= players.Length)
+                {
+                    playerText.GetComponent<TextMeshProUGUI>().text = "";
+                    continue;
+                }
+                var nickName = players[i].NickName;
                 playerText.GetComponent<TextMeshProUGUI>().text = $"{nickName} - {color.ToStringPtBr()}";
             }
         }

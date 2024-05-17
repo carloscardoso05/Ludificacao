@@ -11,13 +11,20 @@ class QuizzesListUI : MonoBehaviour
     private VisualElement Root { get => UIDocument.rootVisualElement; }
     public ListView ListView { get => Root.Q<ListView>("QuizzesList"); }
     private TextField TextField { get => Root.Q<TextField>("SearchQuiz"); }
-    private List<Quiz> Quizzes = new();
+    [SerializeField] private List<Quiz> Quizzes = new();
     public event EventHandler<Quiz> OnQuizSelected;
     public static QuizzesListUI Instance;
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
@@ -46,6 +53,9 @@ class QuizzesListUI : MonoBehaviour
 
     public void SetQuiz(string quizId)
     {
+        Debug.Log($"QuizId: {quizId}");
+        Debug.Log($"QuizzesCount: {Quizzes.Count()}");
+        Debug.Log($"Filter: {Quizzes.Where((quiz) => quiz.id == quizId).Count()}");
         Quiz quiz = Quizzes.Where((quiz) => quiz.id == quizId).Single();
         Debug.Log($"id: {quiz.id} len: {quiz.questions.Count()}");
         OnQuizSelected?.Invoke(this, quiz);

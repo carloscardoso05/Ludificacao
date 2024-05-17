@@ -26,6 +26,7 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        // Application.runInBackground = true;
     }
 
     public void OnClick_Connect()

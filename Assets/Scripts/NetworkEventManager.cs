@@ -67,7 +67,7 @@ public class NetworkEventManager : MonoBehaviour
         if (eventCode == QuizSelectedEventCode)
         {
             Debug.Log("evento quiz selecionado recebido");
-            QuizzesListUI.Instance.SetQuiz((string)eventData.CustomData);
+            QuizzesListUI.Instance.SetQuiz(eventData.CustomData.ToString());
         }
         if (eventCode == DiceRolled)
         {

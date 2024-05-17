@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[Serializable]
+[Serializable()]
 public class Settings
 {
     [SerializeField] private int easyBonus = 1;

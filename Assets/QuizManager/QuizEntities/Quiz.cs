@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 
-[System.Serializable]
+[Serializable()]
 public class Quiz
 {
     public Dictionary<string, Question> questions = new();
