@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -57,5 +58,17 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InLobby) return;
         PhotonNetwork.JoinLobby();
         SceneManager.LoadScene("Lobby");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.Log($"Desconectado. Causa: {cause}");
+        Debug.Log("Tentando reentrar em sala");
+        if (PhotonNetwork.ReconnectAndRejoin())
+        {
+            Debug.Log("Reentrou na sala com sucesso");
+            NetworkEventManager.Instance.Replay();
+        }
+
     }
 }

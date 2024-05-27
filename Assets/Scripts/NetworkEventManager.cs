@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using ExitGames.Client.Photon;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ public class NetworkEventManager : MonoBehaviour
     public const byte DiceRolled = 3;
     public const byte SettingsDefined = 4;
     public const byte PlayerJoinedRoom = 5;
+    public List<EventData> events = new();
 
     private void Awake()
     {
@@ -49,6 +51,7 @@ public class NetworkEventManager : MonoBehaviour
 
     private void OnNetworkEvent(EventData eventData)
     {
+        events.Add(eventData);
         byte eventCode = eventData.Code;
         if (eventCode == QuestionAnsweredEventCode)
         {
@@ -110,6 +113,14 @@ public class NetworkEventManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.RaiseEvent(QuizSelectedEventCode, quiz.id, options, SendOptions.SendReliable);
+        }
+    }
+
+    public void Replay()
+    {
+        foreach (EventData @event in events)
+        {
+            OnNetworkEvent(@event);
         }
     }
 }
