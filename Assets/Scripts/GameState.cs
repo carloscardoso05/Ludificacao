@@ -1,7 +1,7 @@
 public enum GameState
 {
-    SelectingQuiz,
     SelectingPlayersQnt,
+    SelectingQuiz,
     RollingDice,
     SelectingPiece,
     AnsweringQuestion,

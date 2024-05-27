@@ -49,7 +49,7 @@ public class Dice : MonoBehaviour
         var gameState = GameManager.Instance.state;
         if (gameState == GameState.RollingDice && !isAnimating)
         {
-            StartCoroutine(RollDiceToNumCore(num));
+            StartCoroutine(RollDiceToNumCore(num, false));
         }
     }
 
@@ -58,40 +58,26 @@ public class Dice : MonoBehaviour
         var gameState = GameManager.Instance.state;
         if (gameState == GameState.RollingDice && !isAnimating)
         {
-            StartCoroutine(RollDiceCore());
+            int num = Random.Range(1, 7);
+            StartCoroutine(RollDiceToNumCore(num, true));
         }
     }
 
-    private IEnumerator RollDiceCore()
+    private IEnumerator RollDiceToNumCore(int num, bool sendEvent)
     {
         isAnimating = true;
         var prev = Value;
-        for (int i = 0; i < 5; i++)
-        {
-            while (Value == prev) Value = Random.Range(1, 7);
-            spriteResolver.SetCategoryAndLabel("Dice", Value.ToString());
-            prev = Value;
-            yield return new WaitForSeconds(0.1f);
-        }
-        isAnimating = false;
-        GameManager.Instance.ChangeState(GameState.SelectingPiece);
-        SendDiceRolledEvent();
-    }
-
-    private IEnumerator RollDiceToNumCore(int num)
-    {
-        isAnimating = true;
-        var prev = Value;
+        if (sendEvent)
+            SendDiceRolledEvent(num);
         for (int i = 0; i < 4; i++)
         {
             while (Value == prev) Value = Random.Range(1, 7);
-            spriteResolver.SetCategoryAndLabel("Dice", Value.ToString());
             prev = Value;
             yield return new WaitForSeconds(0.1f);
         }
         Value = num;
-        spriteResolver.SetCategoryAndLabel("Dice", Value.ToString());
         isAnimating = false;
+        GameManager.Instance.ChangeState(GameState.SelectingPiece);
     }
 
     private void OnMouseUp()
@@ -100,9 +86,11 @@ public class Dice : MonoBehaviour
             RollDice();
     }
 
-    private void SendDiceRolledEvent()
+    private void SendDiceRolledEvent(int num)
     {
         RaiseEventOptions options = new() { Receivers = ReceiverGroup.Others };
-        PhotonNetwork.RaiseEvent(NetworkEventManager.DiceRolled, Value, options, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(NetworkEventManager.DiceRolled, num, options, SendOptions.SendReliable);
+        Debug.Log($"Evento dado rolado enviado. Valor: {num}");
+
     }
 }

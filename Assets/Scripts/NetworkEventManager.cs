@@ -16,6 +16,7 @@ public class NetworkEventManager : MonoBehaviour
     public const byte DiceRolled = 3;
     public const byte SettingsDefined = 4;
     public const byte PlayerJoinedRoom = 5;
+    public const byte PlayerRejoinedRoom = 6;
     public List<EventData> events = new();
 
     private void Awake()
@@ -51,7 +52,13 @@ public class NetworkEventManager : MonoBehaviour
 
     private void OnNetworkEvent(EventData eventData)
     {
-        events.Add(eventData);
+        HandleEvent(eventData, true);
+    }
+
+    private void HandleEvent(EventData eventData, bool addToList)
+    {
+        if (addToList)
+            events.Add(eventData);
         byte eventCode = eventData.Code;
         if (eventCode == QuestionAnsweredEventCode)
         {
@@ -76,6 +83,7 @@ public class NetworkEventManager : MonoBehaviour
         {
             int diceNum = (int)eventData.CustomData;
             Dice.Instance.RollDiceToNum(diceNum);
+            Debug.Log($"Evento dado rolado recebido. Valor: {diceNum}");
         }
         if (eventCode == SettingsDefined)
         {
@@ -83,6 +91,16 @@ public class NetworkEventManager : MonoBehaviour
             Debug.Log(eventData.CustomData.ToString());
             Settings settings = JsonConvert.DeserializeObject<Settings>(eventData.CustomData.ToString());
             GameSettings.Instance.Settings.ChangeSettings(settings, false);
+        }
+        if (eventCode == PlayerRejoinedRoom)
+        {
+            Debug.Log("Player reentrou na sala");
+            var data = JsonConvert.DeserializeObject<ConnectionManager.PlayerRejoinedRoomEventData>(eventData.CustomData.ToString());
+            if (data.newPlayerId == PhotonNetwork.LocalPlayer.UserId)
+            {
+                Debug.Log("Eu reentrei na sala");
+                Replay(data.otherGameEvents);
+            }
         }
     }
 
@@ -116,11 +134,8 @@ public class NetworkEventManager : MonoBehaviour
         }
     }
 
-    public void Replay()
+    public void Replay(List<EventData> otherGameEvents)
     {
-        foreach (EventData @event in events)
-        {
-            OnNetworkEvent(@event);
-        }
+        events.Skip(otherGameEvents.Count).ToList().ForEach((@event) => HandleEvent(@event, false));
     }
 }

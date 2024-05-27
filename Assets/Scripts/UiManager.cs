@@ -35,7 +35,7 @@ public class UiManager : MonoBehaviour
         GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshPro>();
         YellowPoints = playersInfo.transform.Find("YellowInfo").GetComponentInChildren<TextMeshPro>();
         if (PhotonNetwork.OfflineMode) {
-            MainMenu.gameObject.SetActive(true);
+            ShowMainMenu();
         }
     }
 

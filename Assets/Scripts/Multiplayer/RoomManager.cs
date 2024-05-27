@@ -30,7 +30,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         RoomOptions options = new()
         {
             MaxPlayers = 4,
-            PlayerTtl = 60 * 1000,
+            PlayerTtl = -1,
+            EmptyRoomTtl = 0
         };
         PhotonNetwork.CreateRoom(roomName, options, TypedLobby.Default);
         PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
@@ -53,6 +54,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.PlayerList.Length > 1 && PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.LoadLevel("GameScene");
+            PhotonNetwork.CurrentRoom.IsOpen = false;
         }
     }
 

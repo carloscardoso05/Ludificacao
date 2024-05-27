@@ -79,7 +79,10 @@ public class GameManager : MonoBehaviour
 
     private void ChangeTurn(object sender, AnswerData answerData)
     {
-        if (dice.Value != 6 || !answerData.selectedAnswer.correct)
+        // Debug.Log($"Valor do dado {answerData.extraData.}")
+        // TODO trocar dice.Value para valor do evento
+        ExtraData extraData = (ExtraData)answerData.extraData;
+        if (extraData.diceValue != 6 || !answerData.selectedAnswer.correct)
         {
             ColorsManager.I.UpdateColor();
         }
