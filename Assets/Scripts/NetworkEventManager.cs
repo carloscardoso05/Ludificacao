@@ -95,12 +95,12 @@ public class NetworkEventManager : MonoBehaviour
         if (eventCode == PlayerRejoinedRoom)
         {
             Debug.Log("Player reentrou na sala");
-            var data = JsonConvert.DeserializeObject<ConnectionManager.PlayerRejoinedRoomEventData>(eventData.CustomData.ToString());
-            if (data.newPlayerId == PhotonNetwork.LocalPlayer.UserId)
-            {
-                Debug.Log("Eu reentrei na sala");
-                Replay(data.otherGameEvents);
-            }
+            // var data = JsonConvert.DeserializeObject<ConnectionManager.PlayerRejoinedRoomEventData>(eventData.CustomData.ToString());
+            // if (data.newPlayerId == PhotonNetwork.LocalPlayer.UserId)
+            // {
+            //     Debug.Log("Eu reentrei na sala");
+            //     Replay(data.otherGameEvents);
+            // }
         }
     }
 

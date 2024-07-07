@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
             visual.HomePosition = homePosition + offset;
             piece.transform.parent = transform;
             piece.color = color;
+            piece.id = (byte)i;
             piece.player = this;
             piece.Path = path;
             visual.spriteResolver.SetCategoryAndLabel("Body", color.ToString());
