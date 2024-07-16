@@ -106,8 +106,8 @@ public class ConnectionManager : MonoBehaviourPunCallbacks {
 						Debug.Log("Nowhere, abs is 0");
 					}
 					else {
-						Debug.Log("Index: " + (abs - piece.Path.CurrentIndex - 1));
-						piece.Move(abs - piece.Path.CurrentIndex - 1);
+						Debug.Log("Index: " + (abs - piece.Path.CurrentIndex));
+						piece.Move(abs - piece.Path.CurrentIndex);
 					}
 
 					Debug.Log("\n");
