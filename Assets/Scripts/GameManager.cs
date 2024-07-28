@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using Newtonsoft.Json;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using static Piece;
 
@@ -50,10 +52,11 @@ public class GameManager : MonoBehaviour {
 		await QuizProvider.Instance.GetQuizzes();
 		ChangeState(GameState.SelectingQuiz);
 		QuizManager.Instance.OnAnswered += ChangeTurn;
-		QuizManager.Instance.OnSelectedQuiz += (sender, quiz) => ChangeState(GameState.RollingDice);
+		QuizManager.Instance.OnAnswered += (_, _) => Debug.Log("respondeidio");
+		QuizManager.Instance.OnSelectedQuiz += (_, _) => ChangeState(GameState.RollingDice);
 		QuizManager.Instance.OnChoseQuestion += (_, _) => ChangeState(GameState.AnsweringQuestion);
 		// SetMenuVisibility(true);
-		SetMenuVisibility(false);
+		// SetMenuVisibility(false);
 		if (!PhotonNetwork.OfflineMode) InitGame(PhotonNetwork.PlayerList.Length);
 	}
 
@@ -71,15 +74,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void ChangeTurn(object sender, AnswerData answerData) {
-		// Debug.Log($"Valor do dado {answerData.extraData.}")
-		// TODO trocar dice.Value para valor do evento
 		ExtraData extraData = (ExtraData)answerData.extraData;
 		if (extraData.diceValue != 6 || !answerData.selectedAnswer.correct) {
 			ColorsManager.I.UpdateColor();
-			if (extraData.player.color == (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"])
-				PhotonNetwork.CurrentRoom.SetCustomProperties(
-					new Hashtable { { "CurrentPlayer", ColorsManager.I.currentColor } }
-				);
+			if (!PhotonNetwork.OfflineMode) {
+				var isMyTurn = extraData.player.color == (GameColor)PhotonNetwork.LocalPlayer.CustomProperties["Color"];
+				if (isMyTurn)
+					PhotonNetwork.CurrentRoom.SetCustomProperties(
+						new Hashtable { { "CurrentPlayer", ColorsManager.I.currentColor } }
+					);
+			}
 		}
 
 		ChangeState(GameState.RollingDice);
@@ -111,7 +115,7 @@ public class GameManager : MonoBehaviour {
 			}
 
 			player.color = color;
-			playerGO.name = color.ToString() + "Player";
+			playerGO.name = color + "Player";
 			playerGO.transform.parent = playersGO.transform;
 			playersList.Add(player);
 			player.InstantiatePieces();
@@ -122,6 +126,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void InitGame(int playersQuantity) {
+		if (PhotonNetwork.OfflineMode) {
+			PhotonNetwork.CurrentRoom.MaxPlayers = playersQuantity;
+		}
+
 		ChangeState(GameState.SelectingQuiz);
 		ColorsManager.I = new ColorsManager(playersQuantity);
 		GeneratePlayers(ColorsManager.I.colors);

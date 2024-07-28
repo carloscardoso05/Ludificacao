@@ -37,7 +37,6 @@ class QuizManager : MonoBehaviour
             availableQuestions.AddRange(Quiz.questions.Keys);
         };
         QuizzesListUI.Instance.OnQuizSelected += SendSelectedQuizEvent;
-        QuestionUI.Instance.OnAnswerSelected += SendAnswerEvent;
     }
 
     public void SendAnswerEvent(object sender, AnswerData answerData)
@@ -80,7 +79,8 @@ class QuizManager : MonoBehaviour
         {
             question = question,
             extraData = extraData,
-            color = color
+            color = color,
+            questionIndex = Quiz.questions.Values.ToList().FindIndex(q => q.id == questionId) + 1
         };
         OnChoseQuestion?.Invoke(this, questionData);
         answering = true;

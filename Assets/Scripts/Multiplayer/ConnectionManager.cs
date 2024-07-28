@@ -46,6 +46,10 @@ public class ConnectionManager : MonoBehaviourPunCallbacks {
 		PhotonNetwork.OfflineMode = true;
 		message.text = "";
 		message.text = "Carregando...";
+		PhotonNetwork.CreateRoom("local_room", new() {
+			PlayerTtl = -1,
+			EmptyRoomTtl = -1
+		});
 		SceneManager.LoadScene("OfflineGameScene");
 	}
 
@@ -71,6 +75,7 @@ public class ConnectionManager : MonoBehaviourPunCallbacks {
 
 	public override void OnJoinedRoom() {
 		SyncState();
+		if (PhotonNetwork.OfflineMode) SceneManager.LoadScene("OfflineGameScene");
 	}
 
 	private static void SyncState() {
