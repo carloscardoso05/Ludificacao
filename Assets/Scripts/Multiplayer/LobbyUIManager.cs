@@ -3,64 +3,90 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyUIManager : MonoBehaviourPunCallbacks
-{
-    [SerializeField] private Canvas lobby;
-    [SerializeField] private TMP_InputField roomName;
-    [SerializeField] private RoomManager roomManager;
-    [SerializeField] private Button joinRoom;
-    [SerializeField] private Button createRoom;
-    [SerializeField] private TextMeshProUGUI message;
+namespace Multiplayer {
+	/// <summary>
+	///     Classe responsável por gerenciar a entrada e criação de salas.
+	/// </summary>
+	public class LobbyUIManager : MonoBehaviourPunCallbacks {
+		/// <summary>
+		///     Canvas do lobby (entrar/criar sala).
+		/// </summary>
+		[SerializeField] private Canvas lobby;
 
-    public void OnClick_JoinRoom()
-    {
-        roomName.text = roomName.text.Trim();
-        if (RoomNameIsNotEmpty())
-        {
-            roomManager.JoinRoom(roomName.text);
-            message.text = "Entrando na sala...";
-        }
-    }
+		/// <summary>
+		///     Input do nome da sala.
+		/// </summary>
+		[SerializeField] private TMP_InputField roomName;
 
-    public void OnClick_CreateRoom()
-    {
-        roomName.text = roomName.text.Trim();
-        if (RoomNameIsNotEmpty())
-        {
-            roomManager.CreateRoom(roomName.text);
-            message.text = "Criando sala...";
-        }
-    }
+		/// <summary>
+		///     <see cref="" />
+		/// </summary>
+		[SerializeField] private RoomManager roomManager;
 
-    private bool RoomNameIsNotEmpty()
-    {
-        message.text = "";
-        if (roomName.text.Length == 0)
-        {
-            message.text = "Insira o nome da sala";
-            return false;
-        }
-        return true;
-    }
+		/// <summary>
+		///     Botão para entrar na sala.
+		/// </summary>
+		[SerializeField] private Button joinRoom;
 
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        this.message.text = message;
-    }
+		/// <summary>
+		///     Botão para criar a sala.
+		/// </summary>
+		[SerializeField] private Button createRoom;
 
-    public override void OnLeftRoom()
-    {
-        Debug.Log("Saiu");
-    }
+		/// <summary>
+		///     Mensagem para ser exibida na tela do lobby.
+		/// </summary>
+		[SerializeField] private TextMeshProUGUI message;
 
-    public override void OnJoinedRoom()
-    {
-        lobby.gameObject.SetActive(false);
-        message.text = "";
-    }
+		/// <summary>
+		///     Entra na sala.
+		/// </summary>
+		public void OnClick_JoinRoom() {
+			roomName.text = roomName.text.Trim();
+			if (!RoomNameIsValid()) return;
+			RoomManager.JoinRoom(roomName.text);
+			message.text = "Entrando na sala...";
+		}
 
-    public override void OnConnectedToMaster()
-    {
-        lobby.gameObject.SetActive(true);
-    }
+		/// <summary>
+		///     Cria a sala.
+		/// </summary>
+		public void OnClick_CreateRoom() {
+			roomName.text = roomName.text.Trim();
+			if (!RoomNameIsValid()) return;
+			RoomManager.CreateRoom(roomName.text);
+			message.text = "Criando sala...";
+		}
+
+		/// <summary>
+		///     Retorna se o nome da sala é válido (não vazio). Pode exibir uma mensagem de erro.
+		/// </summary>
+		/// <seealso cref="message" />
+		/// <returns>Se o nome da sala é válido.</returns>
+		private bool RoomNameIsValid() {
+			message.text = "";
+			if (roomName.text.Length != 0) return true;
+			message.text = "Insira o nome da sala";
+			return false;
+		}
+
+		/// <summary>
+		///     Exibe mensagem de erro caso haja algum ao entrar na sala.
+		/// </summary>
+		/// <a href="https://doc-api.photonengine.com/en/pun/v1/class_error_code.html">Códigos de erro.</a>
+		/// <param name="returnCode">Código do erro.</param>
+		/// <param name="errorMessage">Mensagem do erro.</param>
+		public override void OnJoinRoomFailed(short returnCode, string errorMessage) {
+			message.text = errorMessage;
+		}
+
+		public override void OnJoinedRoom() {
+			lobby.gameObject.SetActive(false);
+			message.text = "";
+		}
+
+		public override void OnConnectedToMaster() {
+			lobby.gameObject.SetActive(true);
+		}
+	}
 }

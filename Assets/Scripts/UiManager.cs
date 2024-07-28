@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LudoPlayer;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -59,13 +60,11 @@ public class UiManager : MonoBehaviour {
 	}
 
 	public void SetActiveSettings(bool active) {
-		Debug.Log($"Settings active: {active}");
 		MainMenu.gameObject.SetActive(!active);
 		Settings.gameObject.SetActive(active);
 	}
 
 	public void SetActiveMainMenu(bool active) {
-		Debug.Log($"Menu active: {active}");
 		MainMenu.gameObject.SetActive(active);
 	}
 

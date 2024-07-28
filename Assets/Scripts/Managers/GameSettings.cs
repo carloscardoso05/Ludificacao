@@ -5,112 +5,133 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class GameSettings : MonoBehaviourPunCallbacks
-{
-    public static GameSettings Instance;
+namespace Managers {
+	/// <summary>
+	///     Gerencia as configurações/opções da partida;
+	/// </summary>
+	public class GameSettings : MonoBehaviourPunCallbacks {
+		/// <summary>
+		///     Instância para garantir que só haverá uma desta classe.
+		/// </summary>
+		public static GameSettings Instance;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
-    }
+		private void Awake() {
+			if (Instance == null)
+				Instance = this;
+			else
+				Destroy(gameObject);
+			DontDestroyOnLoad(gameObject);
+		}
+
+		/// <summary>
+		///     Retorna o bônus da dificuldade especificada.
+		/// </summary>
+		/// <param name="difficulty">Dificuldade (0, 1 ou 2, respectivamente fácil, média ou difícil).</param>
+		/// <returns>O bônus da dificuldade.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Caso a dificuldade não esteja entre 0 e 2.</exception>
+		public int GetDifficultyBonus(int difficulty) {
+			return difficulty switch {
+				0 => settings.EasyBonus,
+				1 => settings.MediumBonus,
+				2 => settings.HardBonus,
+				_ => throw new ArgumentOutOfRangeException(
+					$"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
+			};
+		}
+
+		/// <summary>
+		///     Retorna o temporizador da dificuldade especificada.
+		/// </summary>
+		/// <param name="difficulty">Dificuldade (0, 1 ou 2, respectivamente fácil, média ou difícil).</param>
+		/// <returns>O temporizador da dificuldade.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Caso a dificuldade não esteja entre 0 e 2.</exception>
+		public float GetDifficultyTimer(int difficulty) {
+			return difficulty switch {
+				0 => settings.EasyTimer,
+				1 => settings.MediumTimer,
+				2 => settings.HardTimer,
+				_ => throw new ArgumentOutOfRangeException(
+					$"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
+			};
+		}
+
+		/// <summary>
+		///     Retorna uma função que define o temporizador da dificuldade.
+		/// </summary>
+		/// <param name="difficulty">Dificuldade (0, 1 ou 2, respectivamente fácil, média ou difícil).</param>
+		/// <returns>A função que define o temporizador da dificuldade.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Caso a dificuldade não esteja entre 0 e 2.</exception>
+		public Action<string> SetDifficultyTimer(int difficulty) {
+			return newTimer => {
+				switch (difficulty) {
+					case 0:
+						settings.EasyTimer = float.Parse(newTimer);
+						break;
+					case 1:
+						settings.MediumTimer = float.Parse(newTimer);
+						break;
+					case 2:
+						settings.HardTimer = float.Parse(newTimer);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(
+							$"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
+				}
+			};
+		}
+
+		/// <summary>
+		///     Retorna uma função que define o bônus da dificuldade.
+		/// </summary>
+		/// <param name="difficulty">Dificuldade (0, 1 ou 2, respectivamente fácil, média ou difícil).</param>
+		/// <returns>A função que define o bônus da dificuldade.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Caso a dificuldade não esteja entre 0 e 2.</exception>
+		public Action<string> SetDifficultyBonus(int difficulty) {
+			return newBonus => {
+				switch (difficulty) {
+					case 0:
+						settings.EasyBonus = int.Parse(newBonus);
+						break;
+					case 1:
+						settings.MediumBonus = int.Parse(newBonus);
+						break;
+					case 2:
+						settings.HardBonus = int.Parse(newBonus);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(
+							$"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
+				}
+			};
+		}
+
+		/// <summary>
+		///     Envia o evento de que uma configuração ou opção foi definida.
+		/// </summary>
+		/// <param name="settings">Nova configuração.</param>
+		private static void SendSettingsDefinedEvent(Settings settings) {
+			RaiseEventOptions options = new() { Receivers = ReceiverGroup.Others };
+			PhotonNetwork.RaiseEvent(NetworkEventManager.SettingsDefined, JsonConvert.SerializeObject(settings),
+				options, SendOptions.SendReliable);
+		}
 
 
-    #region Bonus
-    [SerializeField]
-    private Settings _settings = new();
-    public Settings Settings
-    {
-        get => _settings;
-        set
-        {
-            _settings = value;
-            SendSettingsDefinedEvent(value);
-        }
-    }
+		#region Bonus
 
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-    {
-        base.OnPlayerEnteredRoom(newPlayer);
-        SendSettingsDefinedEvent(Settings);
-    }
+		/// <summary>
+		///     Configurações da partida.
+		/// </summary>
+		public Settings settings = new();
 
-    private void Start()
-    {
-        Settings.SettingsChanged += (settings) => SendSettingsDefinedEvent(settings);
-    }
+		public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) {
+			base.OnPlayerEnteredRoom(newPlayer);
+			SendSettingsDefinedEvent(settings);
+		}
 
-    #endregion
+		private void Start() {
+			settings.SettingsChanged += SendSettingsDefinedEvent;
+		}
 
-    public int GetDifficultyBonus(int difficulty)
-    {
-        return difficulty switch
-        {
-            0 => Settings.EasyBonus,
-            1 => Settings.MediumBonus,
-            2 => Settings.HardBonus,
-            _ => throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
-        };
-    }
-
-    public float GetDifficultyTimer(int difficulty)
-    {
-        return difficulty switch
-        {
-            0 => Settings.EasyTimer,
-            1 => Settings.MediumTimer,
-            2 => Settings.HardTimer,
-            _ => throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}")
-        };
-    }
-
-    public Action<string> SetDifficultyTimer(int difficulty)
-    {
-        return (newTimer) =>
-        {
-            switch (difficulty)
-            {
-                case 0:
-                    Settings.EasyTimer = float.Parse(newTimer); break;
-                case 1:
-                    Settings.MediumTimer = float.Parse(newTimer); break;
-                case 2:
-                    Settings.HardTimer = float.Parse(newTimer); break;
-                default:
-                    throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
-            }
-        };
-    }
-    public Action<string> SetDifficultyBonus(int difficulty)
-    {
-        return (newBonus) =>
-        {
-            switch (difficulty)
-            {
-                case 0:
-                    Settings.EasyBonus = int.Parse(newBonus); break;
-                case 1:
-                    Settings.MediumBonus = int.Parse(newBonus); break;
-                case 2:
-                    Settings.HardBonus = int.Parse(newBonus); break;
-                default:
-                    throw new ArgumentOutOfRangeException($"Valores válidos para a dificuldade são 0, 1 e 2. Recebeu {difficulty}");
-            }
-        };
-    }
-
-    private void SendSettingsDefinedEvent(Settings settings)
-    {
-        RaiseEventOptions options = new() { Receivers = ReceiverGroup.Others };
-        PhotonNetwork.RaiseEvent(NetworkEventManager.SettingsDefined, JsonConvert.SerializeObject(settings), options, SendOptions.SendReliable);
-        Debug.Log("Configurações enviadas");
-        Debug.Log(JsonConvert.SerializeObject(settings));
-    }
+		#endregion
+	}
 }

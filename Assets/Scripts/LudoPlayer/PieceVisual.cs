@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LudoPlayer;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
-using static Piece;
+using static LudoPlayer.Piece;
 
 [RequireComponent(typeof(Piece))]
 public class PieceVisual : MonoBehaviour
@@ -50,6 +51,10 @@ public class PieceVisual : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///  Move a peça do jogador a cada frame quando a animação está acontecendo.
+    /// </summary>
+    /// <returns>Se a etapa (anda uma casa de cada vez) da animação terminou</returns>
     private bool MovePlayer()
     {
         if ((Vector2)piece.transform.position != cursorPosition)
@@ -60,6 +65,9 @@ public class PieceVisual : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Envia esta peça para sua casa de origem.
+    /// </summary>
     public void SendHome()
     {
         tilePosition = HomePosition;
@@ -67,15 +75,24 @@ public class PieceVisual : MonoBehaviour
         animationEnded = false;
     }
 
+    /// <summary>
+    /// Inicia a animação de movimento da peça.
+    /// </summary>
+    /// <param name="args">Argumentos para iniciar a animação.</param>
     public void StartAnimation(PieceMovedArgs args)
     {
-        tilePosition = args.currTile.transform.position;
-        piece.Path.CurrentIndex -= args.tilesMoved - 1;
+        tilePosition = args.CurrTile.transform.position;
+        piece.Path.CurrentIndex -= args.TilesMoved - 1;
         cursorPosition = piece.Path.Current.transform.position;
         animationEnded = false;
         pieceChangedTileArgs = args;
     }
 
+    /// <summary>
+    /// Calcula as posições deslocadas das peças quando hão várias em uma mesma casa.
+    /// </summary>
+    /// <param name="tile">Casa em que as peças estão.</param>
+    /// <returns>As posições com um espaçamento entre si.</returns>
     private List<Vector3> GetOffsetedPositions(Tile tile)
     {
         float spacing = 1.5f;
@@ -92,6 +109,11 @@ public class PieceVisual : MonoBehaviour
         return offsetedPositions;
     }
 
+    /// <summary>
+    /// Reorganiza as peças em suas posições deslocadas quando existem várias peças na mesma casa.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     private void Reorganize(object sender, EventArgs args)
     {
         if (piece.inHome) return;

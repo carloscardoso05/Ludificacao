@@ -7,12 +7,18 @@ public class Board : MonoBehaviour
 {
     private readonly Dictionary<GameColor, GameObject> paths = new();
     private readonly Dictionary<GameColor, GameObject> homes = new();
+    /// <summary>
+    /// Index inicial das casas no caminho branco de cada cor.
+    /// </summary>
     private readonly Dictionary<GameColor, int> initialIndexes = new(){
         {GameColor.Blue, 0},
         {GameColor.Red, 13},
         {GameColor.Green, 26},
         {GameColor.Yellow, 39},
     };
+    /// <summary>
+    ///  Deslocamentos das casas de origem das peças de uma cor.
+    /// </summary>
     private readonly Vector3[] offsets = { Vector3.zero, new(1, 0), new(1, 1), new(0, 1) };
 
     private void Awake()

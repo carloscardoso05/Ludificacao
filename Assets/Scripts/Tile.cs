@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LudoPlayer;
 using UnityEngine;
 public class Tile : MonoBehaviour {
     public bool isSafe;
