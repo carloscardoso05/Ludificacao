@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using LudoPlayer;
 using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using static Piece;
+using static LudoPlayer.Piece;
+using Player = LudoPlayer.Player;
 
 public class GameManager : MonoBehaviour {
 	[SerializeField] private GameObject piecePrefab;
@@ -52,7 +54,6 @@ public class GameManager : MonoBehaviour {
 		await QuizProvider.Instance.GetQuizzes();
 		ChangeState(GameState.SelectingQuiz);
 		QuizManager.Instance.OnAnswered += ChangeTurn;
-		QuizManager.Instance.OnAnswered += (_, _) => Debug.Log("respondeidio");
 		QuizManager.Instance.OnSelectedQuiz += (_, _) => ChangeState(GameState.RollingDice);
 		QuizManager.Instance.OnChoseQuestion += (_, _) => ChangeState(GameState.AnsweringQuestion);
 		// SetMenuVisibility(true);
@@ -65,10 +66,10 @@ public class GameManager : MonoBehaviour {
 	#region Game Mechanics
 
 	public void CheckPlayerWin(object sender, PieceMovedArgs args) {
-		if (args.currTile.isFinal && args.currTile.pieces.Count == 2) {
+		if (args.CurrTile.isFinal && args.CurrTile.pieces.Count == 2) {
 			OnGameEnded?.Invoke(this, new() {
 				players = players,
-				winner = args.piece.player,
+				winner = args.Piece.player,
 			});
 		}
 	}
@@ -111,7 +112,6 @@ public class GameManager : MonoBehaviour {
 					{ "Color", color }
 				};
 				photonPlayer.SetCustomProperties(photonPlayerCustomProps);
-				player.photonPlayer = photonPlayer;
 			}
 
 			player.color = color;
@@ -133,7 +133,6 @@ public class GameManager : MonoBehaviour {
 		ChangeState(GameState.SelectingQuiz);
 		ColorsManager.I = new ColorsManager(playersQuantity);
 		GeneratePlayers(ColorsManager.I.colors);
-		Debug.Log(PhotonNetwork.IsMasterClient);
 		if (PhotonNetwork.IsMasterClient) {
 			QuizManager.Instance.SelectQuiz();
 		}

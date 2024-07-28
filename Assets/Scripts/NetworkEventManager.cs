@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExitGames.Client.Photon;
+using LudoPlayer;
+using Managers;
 using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using static GameManager;
+using Player = LudoPlayer.Player;
 
 public class NetworkEventManager : MonoBehaviour
 {
@@ -62,7 +65,6 @@ public class NetworkEventManager : MonoBehaviour
         byte eventCode = eventData.Code;
         if (eventCode == QuestionAnsweredEventCode)
         {
-            Debug.Log("evento questão respondida recebido");
             SimpleAnswerData simpleAnswerData = JsonConvert.DeserializeObject<SimpleAnswerData>(eventData.CustomData.ToString());
             ExtraData extraData = new()
             {
@@ -76,31 +78,17 @@ public class NetworkEventManager : MonoBehaviour
         }
         if (eventCode == QuizSelectedEventCode)
         {
-            Debug.Log("evento quiz selecionado recebido");
             QuizzesListUI.Instance.SetQuiz(eventData.CustomData.ToString());
         }
         if (eventCode == DiceRolled)
         {
             int diceNum = (int)eventData.CustomData;
             Dice.Instance.RollDiceToNum(diceNum);
-            Debug.Log($"Evento dado rolado recebido. Valor: {diceNum}");
         }
         if (eventCode == SettingsDefined)
         {
-            Debug.Log("Configurações recebidas");
-            Debug.Log(eventData.CustomData.ToString());
             Settings settings = JsonConvert.DeserializeObject<Settings>(eventData.CustomData.ToString());
-            GameSettings.Instance.Settings.ChangeSettings(settings, false);
-        }
-        if (eventCode == PlayerRejoinedRoom)
-        {
-            Debug.Log("Player reentrou na sala");
-            // var data = JsonConvert.DeserializeObject<ConnectionManager.PlayerRejoinedRoomEventData>(eventData.CustomData.ToString());
-            // if (data.newPlayerId == PhotonNetwork.LocalPlayer.UserId)
-            // {
-            //     Debug.Log("Eu reentrei na sala");
-            //     Replay(data.otherGameEvents);
-            // }
+            GameSettings.Instance.settings.ChangeSettings(settings, false);
         }
     }
 

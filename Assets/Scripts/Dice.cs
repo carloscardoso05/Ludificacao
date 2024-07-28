@@ -85,6 +85,5 @@ public class Dice : MonoBehaviour {
 		PhotonNetwork.RaiseEvent(NetworkEventManager.DiceRolled, num, options, SendOptions.SendReliable);
 		var table = new Hashtable { { "DiceValue", num } };
 		PhotonNetwork.CurrentRoom.SetCustomProperties(table);
-		Debug.Log($"Evento dado rolado enviado. Valor: {num}");
 	}
 }

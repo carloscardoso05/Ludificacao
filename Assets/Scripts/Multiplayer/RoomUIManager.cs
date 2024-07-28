@@ -4,73 +4,106 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RoomUIManager : MonoBehaviourPunCallbacks
-{
-    [SerializeField] private GameObject SettingsUIManager;
-    [SerializeField] private Canvas roomCanvas;
-    [SerializeField] private RoomManager roomManager;
-    [SerializeField] private Button exitRoom;
-    [SerializeField] private Button settings;
-    [SerializeField] private Button startGame;
-    [SerializeField] private Button settingsClose;
-    [SerializeField] private TextMeshProUGUI roomName;
-    private float roomUpdateTimer = 1.5f;
+namespace Multiplayer {
+	/// <summary>
+	/// Classe responsável por gerenciar a interface da sala.
+	/// </summary>
+	public class RoomUIManager : MonoBehaviourPunCallbacks {
+		[SerializeField] private GameObject settingsUIManager;
 
-    private void Start()
-    {
-        exitRoom.onClick.AddListener(() => roomManager.LeaveRoom());
+		/// <summary>
+		///     Canvas da tela da sala.
+		/// </summary>
+		[SerializeField] private Canvas roomCanvas;
 
-        startGame.onClick.AddListener(() => roomManager.StartGame());
+		[SerializeField] private RoomManager roomManager;
 
-        settings.onClick.AddListener(() => roomManager.OpenSettings(SettingsUIManager, roomCanvas.gameObject));
+		/// <summary>
+		///     Botão para sair da sala.
+		/// </summary>
+		[SerializeField] private Button exitRoom;
 
-        settingsClose.onClick.AddListener(() => roomManager.CloseSettings(SettingsUIManager, roomCanvas.gameObject));
-    }
+		/// <summary>
+		///     Botão para abrir a tela das opções.
+		/// </summary>
+		[SerializeField] private Button settings;
 
-    private void Update()
-    {
-        HandleUpdateRoom();
-    }
+		/// <summary>
+		///     Botão para iniciar a partida.
+		/// </summary>
+		[SerializeField] private Button startGame;
 
-    private void HandleUpdateRoom()
-    {
-        if (roomUpdateTimer <= 0)
-        {
-            roomUpdateTimer = 1.5f;
-            UpdateRoom();
-        }
-        roomUpdateTimer -= Time.deltaTime;
-    }
+		/// <summary>
+		///     Botão para fechar a tela das opções.
+		/// </summary>
+		[SerializeField] private Button settingsClose;
 
-    private void UpdateRoom()
-    {
-        if (PhotonNetwork.InRoom)
-        {
-            var players = PhotonNetwork.PlayerList;
-            for (int i = 0; i < 4; i++)
-            {
-                var color = ColorsManager.GetColorsByPlayersQty(4)[i];
-                var playerText = transform.Find("Players").Find($"Player{i + 1}");
-                if (i >= players.Length)
-                {
-                    playerText.GetComponent<TextMeshProUGUI>().text = "";
-                    continue;
-                }
-                var nickName = players[i].NickName;
-                playerText.GetComponent<TextMeshProUGUI>().text = $"{nickName} - {color.ToStringPtBr()}";
-            }
-        }
-    }
+		/// <summary>
+		///     Campo de exibição do nome da sala
+		/// </summary>
+		[SerializeField] private TextMeshProUGUI roomName;
 
-    public override void OnJoinedRoom()
-    {
-        UpdateRoom();
-        roomName.text = PhotonNetwork.CurrentRoom.Name;
-        roomCanvas.gameObject.SetActive(true);
-    }
+		/// <summary>
+		///     Tempo em segundos para atualizar a lista de jogadores.
+		/// </summary>
+		/// <seealso cref="HandleUpdateRoom" />
+		private float _roomUpdateTimer = 1.5f;
 
-    public override void OnConnectedToMaster()
-    {
-        roomCanvas.gameObject.SetActive(false);
-    }
+		private void Start() {
+			exitRoom.onClick.AddListener(RoomManager.LeaveRoom);
+
+			startGame.onClick.AddListener(RoomManager.StartGame);
+
+			settings.onClick.AddListener(() =>
+				RoomManager.SetSettingsVisible(settingsUIManager, roomCanvas.gameObject, true));
+
+			settingsClose.onClick.AddListener(() =>
+				RoomManager.SetSettingsVisible(settingsUIManager, roomCanvas.gameObject, false));
+		}
+
+		private void Update() {
+			HandleUpdateRoom();
+		}
+
+		/// <summary>
+		///     Executa <see cref="UpdateRoomPlayersList" /> quando o temporizador chega a 0.
+		/// </summary>
+		private void HandleUpdateRoom() {
+			if (_roomUpdateTimer <= 0) {
+				_roomUpdateTimer = 1.5f;
+				UpdateRoomPlayersList();
+			}
+
+			_roomUpdateTimer -= Time.deltaTime;
+		}
+
+		/// <summary>
+		///     Atualiza a lista dos jogadores na sala.
+		/// </summary>
+		private void UpdateRoomPlayersList() {
+			if (!PhotonNetwork.InRoom) return;
+			var players = PhotonNetwork.PlayerList;
+			for (var i = 0; i < 4; i++) {
+				var color = ColorsManager.GetColorsByPlayersQty(4)[i];
+				var playerText = transform.Find("Players").Find($"Player{i + 1}");
+				if (i >= players.Length) {
+					playerText.GetComponent<TextMeshProUGUI>().text = "";
+					continue;
+				}
+
+				var nickName = players[i].NickName;
+				playerText.GetComponent<TextMeshProUGUI>().text = $"{nickName} - {color.ToStringPtBr()}";
+			}
+		}
+
+		public override void OnJoinedRoom() {
+			UpdateRoomPlayersList();
+			roomName.text = PhotonNetwork.CurrentRoom.Name;
+			roomCanvas.gameObject.SetActive(true);
+		}
+
+		public override void OnConnectedToMaster() {
+			roomCanvas.gameObject.SetActive(false);
+		}
+	}
 }

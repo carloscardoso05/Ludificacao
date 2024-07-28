@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LudoPlayer;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
-using static Piece;
+using static LudoPlayer.Piece;
 
 [RequireComponent(typeof(Piece))]
 public class PieceVisual : MonoBehaviour
@@ -69,8 +70,8 @@ public class PieceVisual : MonoBehaviour
 
     public void StartAnimation(PieceMovedArgs args)
     {
-        tilePosition = args.currTile.transform.position;
-        piece.Path.CurrentIndex -= args.tilesMoved - 1;
+        tilePosition = args.CurrTile.transform.position;
+        piece.Path.CurrentIndex -= args.TilesMoved - 1;
         cursorPosition = piece.Path.Current.transform.position;
         animationEnded = false;
         pieceChangedTileArgs = args;

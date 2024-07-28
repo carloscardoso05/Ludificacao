@@ -1,73 +1,77 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class RoomManager : MonoBehaviourPunCallbacks
-{
-    public static RoomManager Instance;
+namespace Multiplayer {
+	/// <summary>
+	///     Classe responsável pela interface da sala.
+	/// </summary>
+	/// <remarks>
+	///     Também interage com as opções da partida (bônus e temporizadores).
+	/// </remarks>
+	public class RoomManager : MonoBehaviourPunCallbacks {
+		/// <summary>
+		///     Instância da classe usada para garantir que somente uma existirá durante o jogo.
+		///     Se uma já existir e for tentado criar outra, a outra será destruída.
+		/// </summary>
+		private static RoomManager _instance;
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+		private void Awake() {
+			DontDestroyOnLoad(gameObject);
+			if (_instance == null)
+				_instance = this;
+			else
+				Destroy(gameObject);
+		}
 
-    public Room Room
-    {
-        get => PhotonNetwork.CurrentRoom;
-    }
+		/// <summary>
+		///     Cria e entra em uma sala com o nome especificado.
+		/// </summary>
+		/// <param name="roomName">Nome da sala.</param>
+		public static void CreateRoom(string roomName) {
+			RoomOptions options = new() {
+				MaxPlayers = 4,
+				PlayerTtl = -1,
+				EmptyRoomTtl = 0
+			};
+			PhotonNetwork.CreateRoom(roomName, options, TypedLobby.Default);
+			PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
+		}
 
-    public void CreateRoom(string roomName)
-    {
-        RoomOptions options = new()
-        {
-            MaxPlayers = 4,
-            PlayerTtl = -1,
-            EmptyRoomTtl = 0
-        };
-        PhotonNetwork.CreateRoom(roomName, options, TypedLobby.Default);
-        PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
-        Debug.Log("Master client aqui");
-    }
+		/// <summary>
+		///     Entra na sala.
+		/// </summary>
+		/// <param name="roomName">Nome da sala</param>
+		public static void JoinRoom(string roomName) {
+			PhotonNetwork.JoinRoom(roomName);
+		}
 
-    public void JoinRoom(string roomName)
-    {
-        PhotonNetwork.JoinRoom(roomName);
-    }
+		/// <summary>
+		///     Sai da sala.
+		/// </summary>
+		public static void LeaveRoom() {
+			PhotonNetwork.LeaveRoom();
+		}
 
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
+		/// <summary>
+		///     Inicia a partida no modo online.
+		/// </summary>
+		public static void StartGame() {
+			if (PhotonNetwork.PlayerList.Length <= 1 || !PhotonNetwork.IsMasterClient) return;
+			PhotonNetwork.LoadLevel("GameScene");
+			PhotonNetwork.CurrentRoom.IsOpen = false;
+		}
 
-    public void StartGame()
-    {
-        Debug.Log($"IsMasterClient: {PhotonNetwork.IsMasterClient}");
-        if (PhotonNetwork.PlayerList.Length > 1 && PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.LoadLevel("GameScene");
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-        }
-    }
-
-    public void OpenSettings(GameObject settings, GameObject room)
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-        settings.SetActive(true);
-        room.SetActive(false);
-    }
-
-    public void CloseSettings(GameObject settings, GameObject room)
-    {
-        settings.SetActive(false);
-        room.SetActive(true);
-    }
+		/// <summary>
+		///     Exibe ou esconde as opções da partida (bônus e temporizadores).
+		/// </summary>
+		/// <param name="settings">Interface das opções.</param>
+		/// <param name="room">Interface da sala.</param>
+		/// <param name="isVisible">Se as opções devem ser exibidas.</param>
+		public static void SetSettingsVisible(GameObject settings, GameObject room, bool isVisible) {
+			if (!PhotonNetwork.IsMasterClient) return;
+			settings.SetActive(isVisible);
+			room.SetActive(!isVisible);
+		}
+	}
 }
