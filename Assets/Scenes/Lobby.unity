@@ -407,7 +407,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.35
+  m_fontSize: 22.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -467,7 +467,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 81620687833865311, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.5023003
+      value: 1.5023041
       objectReference: {fileID: 0}
     - target: {fileID: 308798806460747921, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_Name
@@ -1507,7 +1507,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27.25
+  m_fontSize: 22.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2133,7 +2133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ccc9865d640e0e4a9eb7d3422bc4344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingsUIManager: {fileID: 1067150041}
+  settingsUIManager: {fileID: 1067150041}
   roomCanvas: {fileID: 1035076984}
   roomManager: {fileID: 1638946251}
   exitRoom: {fileID: 652633920}
@@ -3355,7 +3355,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.95
+  m_fontSize: 16.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
