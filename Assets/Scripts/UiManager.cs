@@ -5,11 +5,14 @@ using LudoPlayer;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour {
 	public EndGame EndGameScreen;
 	public CanvasRenderer Settings;
 	public CanvasRenderer MainMenu;
+	public Button SettingsButton;
+	public Button CloseSettingsButton;
 	public static UiManager I;
 	public PlayerIcon playersInfo;
 	private TextMeshPro BluePoints;
@@ -28,6 +31,8 @@ public class UiManager : MonoBehaviour {
 
 	void Start() {
 		GameManager.Instance.OnGameEnded += EndGame;
+		SettingsButton.onClick.AddListener(() => SetActiveSettings(true));
+		CloseSettingsButton.onClick.AddListener(() => SetActiveSettings(false));
 		BluePoints = playersInfo.transform.Find("BlueInfo").GetComponentInChildren<TextMeshPro>();
 		RedPoints = playersInfo.transform.Find("RedInfo").GetComponentInChildren<TextMeshPro>();
 		GreenPoints = playersInfo.transform.Find("GreenInfo").GetComponentInChildren<TextMeshPro>();

@@ -1110,7 +1110,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 81620687833865311, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.5023003
+      value: 1.5023041
       objectReference: {fileID: 0}
     - target: {fileID: 308798806460747921, guid: 207e66b98cf787241ad1b093e63dca96, type: 3}
       propertyPath: m_Name
@@ -1480,7 +1480,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45.95
+  m_fontSize: 37.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1986,7 +1986,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45.95
+  m_fontSize: 37.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2629,7 +2629,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.35
+  m_fontSize: 38.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4684,7 +4684,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.3
+  m_fontSize: 38.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5089,6 +5089,7 @@ MonoBehaviour:
   state: 0
   dice: {fileID: 788069574}
   board: {fileID: 1811131975}
+  players: []
   alwaysAnswerRight: 0
   directMove: 0
 --- !u!4 &837446759
@@ -5649,7 +5650,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.35
+  m_fontSize: 38.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5820,6 +5821,8 @@ MonoBehaviour:
   EndGameScreen: {fileID: 943504019}
   Settings: {fileID: 2054819105}
   MainMenu: {fileID: 1303967556}
+  SettingsButton: {fileID: 602281996}
+  CloseSettingsButton: {fileID: 1002477382}
   playersInfo: {fileID: 963969244}
 --- !u!1 &1092752529
 GameObject:
@@ -7280,7 +7283,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.3
+  m_fontSize: 38.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
